@@ -21,7 +21,7 @@
                     <div class="form-gorup row">
                         <label for="url">url</label>
                         <input type="text" id="url" class="form-control">
-                        <label for="selector">selector</label>
+                        <label for="selector" title="the jquery selector that need to be crawled">selector</label>
                         <input type="text" id="selector" class="form-control mb-1">
                         <button type="submit" class="btn btn-primary mb-2">submit</button>
                     </div>
@@ -35,6 +35,7 @@
                                 <textarea name="dump" class="form-control" id="dump" cols="30" rows="10"></textarea>
                             </div>
                             <div class="col">
+                                <label for="mønster" title="pattern for the data is: d = date, t = title, b = description, p = place">pattern</label>
                                 <textarea name="mønster" class="form-control" id="mønster" cols="30" rows="10"></textarea>
                             </div>
                         </div>
