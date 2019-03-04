@@ -1,0 +1,60 @@
+<aside class="dropdown-full-width" ng-cloak>
+    <div class="dropdown-full-width-container">
+
+        <!-- SEARCH DROPDOWN CLOSE TOGGLE-->
+
+        <div class="large-12 text-right">
+            <a href="" class="close-dropdown close-search" ng-click="navMenu.toggleSearchMenu()">
+                <svg class="D-close-big">
+                    <use xlink:href="#D-close-big">
+                    </use>
+                </svg>
+            </a>
+        </div>
+
+        <div class="dropdown-full-width-content">
+            <div class="row">
+                <div class="large-8 large-offset-2 medium-12 columns">
+                    <div class="search-wrapper">
+                        <div class="search-bar">
+                            <svg class="D-search-searchbar">
+                                <use xlink:href="#D-search">
+                                </use>
+                            </svg>
+                            <input type="text" name="site-search-input" ng-model="search.searchQuery" ng-model-options="{debounce: 400}" class="text-field search-input" />
+                        </div>
+                        <div class="search-only">
+                            <div class="checkbox">
+                                <input type="checkbox" id="only" ng-model="search.nonProductionSearchOnly" />
+                                <label for="only">{{::search.searchProductionText}}</label>
+                            </div>
+                        </div>
+                        <div class="search-loading" ng-if="search.isSearching && !search.searchErrored">
+                            <svg class="D-crown fa-spin">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#D-crown">
+                                </use>
+                            </svg>
+                        </div>
+                        <div class="search-error" ng-if="search.searchErrored">
+                            <p class="error">
+                                {{::search.searchErrorMessage}}
+                            </p>
+                        </div>
+                        <ul class="search-results">
+                            <li ng-repeat="searchResult in search.searchResults">
+                                <a href="//{{::searchResult.pageUrl}}">
+                                    <h3>
+                                        {{::searchResult.pageTitle}}
+                                        <span class="search-genre" ng-if="searchResult.isProductionPage">({{::searchResult.productionGenre}})</span>
+                                    </h3>
+                                    <p ng-if="searchResult.pageSummary" ng-bind-html="searchResult.pageSummary"></p>
+                                    <p ng-repeat="highlight in searchResult.highlightedText" ng-bind-html="highlight"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>

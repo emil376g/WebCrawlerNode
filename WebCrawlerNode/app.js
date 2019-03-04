@@ -6,6 +6,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const puppeteer = require('puppeteer');
+const fse = require('fs-extra'); // v 5.0.0
+const $ = require('cheerio');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -62,4 +65,27 @@ app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
+});
+
+let crawl = async () => {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    await page.goto('https://kglteater.dk/calendar/');
+    await page.waitFor(10000);
+    const result = await page.evaluate(() => {
+        let data = [];
+        let elements = document.querySelectorAll('span');
+
+        for (var element of elements) {
+
+            data.push(element.textContent);
+        }
+
+        return data;
+    });
+    await browser.close();
+    return result;
+};
+crawl().then((result) => {
+    console.log(result);
 });

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="script.js"></script>
+
+    <title>WebCrawler</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <form action="" id="form1" class="col">
+                    <div class="form-gorup row">
+                        <label for="url">url</label>
+                        <input type="text" id="url" class="form-control">
+                        <label for="selector">selector</label>
+                        <input type="text" id="selector" class="form-control mb-1">
+                        <button type="submit" class="btn btn-primary mb-2">submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12">
+                <form action="" id="form2" class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <textarea name="dump" class="form-control" id="dump" cols="30" rows="10"></textarea>
+                            </div>
+                            <div class="col">
+                                <textarea name="mønster" class="form-control" id="mønster" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <table id="data" class="table">
+
+                </table>
+                <button class="btn btn-primary" id="postdata">send data</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

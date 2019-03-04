@@ -1,0 +1,1 @@
+module.exports = require("npm:angulartics-google-analytics@0.2.0/lib/index.js");
