@@ -40,6 +40,7 @@
     <Compile Include="routes\users.js" />
     <Content Include="lib\config\cert.pem" />
     <Content Include="lib\config\key.pem" />
+    <Content Include="ormconfig.json" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
@@ -54,6 +55,8 @@
     <Folder Include="lib\models\" />
     <Folder Include="lib\controllers\" />
     <Folder Include="lib\config\" />
+    <Folder Include="lib\migration\" />
+    <Folder Include="lib\subscriber\" />
     <Folder Include="lib\routes\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
@@ -72,10 +75,14 @@
     <TypeScriptCompile Include="lib\models\crmModel.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="lib\models\Todo.ts" />
     <TypeScriptCompile Include="lib\routes\crmRoutes.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="lib\Server.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="lib\todosManager.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

@@ -20,7 +20,6 @@ $(document).ready(function() {
         };
 
         $.ajax(settings).done(function(response) {
-            $("#dump").html('');
             $("#form2").show();
             $("#postdata").show();
             rep = JSON.parse(JSON.stringify(response));
@@ -35,72 +34,71 @@ $(document).ready(function() {
     $("#mønster").change(function(e) {
         e.preventDefault();
         $('#data').html('');
-        let counter = 0
-        let i = 0;
         $('#data').append('<tr></tr>');
         for (let p = 0; p < $("#mønster").val().length; p++) {
 
-            switch ($("#mønster").val().charAt(counter)) {
+            switch ($("#mønster").val().charAt(p)) {
                 case 'd':
                     $('#data tr:first').append('<th class="date">date</th>');
-                    counter++;
                     break;
                 case 't':
                     $('#data tr:first').append('<th class="title">title</th>');
-                    counter++;
                     break;
                 case 'b':
                     $('#data tr:first').append('<th class="description">description</th>');
-                    counter++;
                     break;
                 case 'p':
                     $('#data tr:first').append('<th class="place">place</th>');
-                    counter++;
                     break;
                 default:
                     break;
             }
         }
-        counter = 0
         for (let j = 0; j < rep.length; j++) {
+            let i = 0;
+
             for (let index = 0; index < rep[j].length / 4; index++) {
                 $('#data tr:last').after('<tr class="data"></tr>');
                 for (let k = 0; k < $("#mønster").val().length; k++) {
-                    $("#data tr:last").append('<td><input class="' + $('#mønster').val().charAt(k) + '" type="text"></td>');
+                    if ($("#mønster").val().charAt(k) == 'd' || $("#mønster").val().charAt(k) == 'b' || $("#mønster").val().charAt(k) == 't' || $("#mønster").val().charAt(k) == 'p') {
+                        $("#data tr:last").append('<td><input class="' + $('#mønster').val().charAt(k) + '" type="text"></td>');
+                    }
+                }
+                for (let index2 = 0; index2 < $('#data tr:last').children().length; index2++) {
+                    console.log(i)
+                    if ($('#data tr:last').children()[index2].value == '')
+                        i++;
+                    if (i >= 4) {
+                        $('#data tr:last').remove();
+                    }
                 }
             }
         }
-        var indexer = 0;
         for (let index1 = 0; index1 < rep.length; index1++) {
-            console.log(rep[index1])
+            let indexer = 0;
             for (let index2 = 0; index2 < rep[index1].length / 4; index2++) {
-                let i = 0;
-                counter++;
                 for (let index = 0; index < $('#mønster').val().length; index++) {
-                    switch ($("#mønster").val().charAt(i)) {
+                    switch ($("#mønster").val().charAt(index)) {
                         case 'd':
-                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring((1), JSON.stringify((rep[index1][indexer])).length - 1));
+                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
-                            i++;
                             break;
                         case 't':
-                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring((1), JSON.stringify((rep[index1][indexer])).length - 1));
-                            i++;
+                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
                             break;
                         case 'b':
                             if (JSON.stringify(rep[index1][indexer]) != undefined) {
-                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring((1), JSON.stringify((rep[index1][indexer])).length - 1));
-                                i++;
+                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                                 indexer++;
                             }
                             break;
                         case 'p':
-                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring((1), JSON.stringify((rep[index1][indexer])).length - 1));
-                            i++;
+                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
                             break;
                         default:
+                            indexer++;
                             break;
                     }
                 }

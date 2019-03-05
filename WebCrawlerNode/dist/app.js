@@ -24,7 +24,12 @@ class App {
     config() {
         // support application/json type post data
         this.app.use(bodyParser.json());
-        //support application/x-www-form-urlencoded post data
+        this.app.use(function (req, res, next) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+            next();
+        }); //support application/x-www-form-urlencoded post data
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
 }

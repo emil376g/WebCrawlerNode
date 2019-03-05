@@ -1,0 +1,25 @@
+﻿{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "",
+  "database": "webcrawl",
+  "synchronize": false,
+  "migrationsRun": true,
+  "logging": false,
+  "entities": [
+    "dist/models/*.js"
+  ],
+  "migrations": [
+    "dist/migration/**/*.js"
+  ],
+  "subscribers": [
+    "dist/subscriber/**/*.js"
+  ],
+  "cli": {
+    "entitiesDir": "lib/models/Todo",
+    "migrationsDir": "lib/migration",
+    "subscribersDir": "lib/subscriber"
+  }
+}

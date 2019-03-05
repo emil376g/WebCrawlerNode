@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 exports.WebsiteSchema = new Schema({
     date: {
-        type: Date,
+        type: String,
     },
     place: {
         type: String,

@@ -1,13 +1,33 @@
 ﻿import * as mongoose from 'mongoose';
 import { WebsiteSchema } from '../models/crmModel';
+import { getConnection, Repository } from 'typeorm';
 import { Request, Response } from 'express';
 const puppeteer = require('puppeteer');
+import Todo from '../models/Todo';
 
+let repository: Repository<Todo>;
+const initialize = () => {
+    const connection = getConnection();
+    repository = connection.getRepository(Todo);
+};
 const Crawl = mongoose.model('CrawlData', WebsiteSchema);
 export class ContactController {
 
-    public addNewCrawl(req: Request, res: Response) {
+    public async addNewCrawl(req: Request, res: Response) {
+        if (repository === undefined) {
+            initialize();
+        }
+        const todo = new Todo();
+        todo.date = req.body[0].date;
+        todo.title = req.body[0].title;
+        todo.place = req.body[0].place;
+        todo.url = req.body[0].url;
+        todo.crawlClass = req.body[0].crawlClass;
+        todo.datastructur = req.body[0].datastructur;
+        todo.description = req.body[0].description;
+        await repository.save(todo);
         console.log(req.body);
+        console.log(todo)
         let newContact = new Crawl({
             _id: new mongoose.Types.ObjectId(),
             date: req.body[0].date,
