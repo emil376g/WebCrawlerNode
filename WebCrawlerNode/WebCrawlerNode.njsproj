@@ -18,7 +18,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e20f1693-1742-43c4-8c47-704f0c1b1646</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>app.js</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -35,35 +36,22 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app.js" />
-    <Compile Include="routes\index.js" />
-    <Compile Include="routes\users.js" />
     <Content Include="lib\config\cert.pem" />
     <Content Include="lib\config\key.pem" />
-    <Content Include="ormconfig.json" />
+    <Content Include="ormconfig.json">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="package.json" />
-    <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />
-    <Content Include="views\index.pug" />
-    <Content Include="views\layout.pug" />
-    <Content Include="views\error.pug" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\" />
     <Folder Include="lib\" />
     <Folder Include="lib\models\" />
     <Folder Include="lib\controllers\" />
     <Folder Include="lib\config\" />
     <Folder Include="lib\migration\" />
-    <Folder Include="lib\subscriber\" />
     <Folder Include="lib\routes\" />
-    <Folder Include="public\" />
-    <Folder Include="public\images\" />
-    <Folder Include="public\javascripts\" />
-    <Folder Include="public\stylesheets\" />
-    <Folder Include="routes\" />
-    <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="lib\app.ts">
@@ -72,17 +60,21 @@
     <TypeScriptCompile Include="lib\controllers\crmController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="lib\migration\1551792672240-WebCrawl.ts" />
+    <TypeScriptCompile Include="lib\models\CrawledWebsite.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="lib\models\crmModel.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\models\Todo.ts" />
+    <TypeScriptCompile Include="lib\models\CrawlModel.ts" />
+    <TypeScriptCompile Include="lib\models\DetailedModel.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="lib\routes\crmRoutes.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="lib\Server.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\todosManager.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

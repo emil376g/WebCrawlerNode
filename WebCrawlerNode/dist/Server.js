@@ -12,13 +12,11 @@ const app_1 = require("./app");
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const https = require("https");
-const Todo_1 = require("./models/Todo");
+const CrawlModel_1 = require("./models/CrawlModel");
 const fs = require("fs");
 var path = require('path');
 const PORT = 54321;
 const httpsOptions = {
-    //key: fs.readFileSync('C:/Users/emil376g/source/repos/WebCrawlerNode/WebCrawlerNode/lib/config/key.pem'),
-    //cert: fs.readFileSync('C:/Users/emil376g/source/repos/WebCrawlerNode/WebCrawlerNode/lib/config/cert.pem')
     key: fs.readFileSync(path.join(__dirname, './config') + '/key.pem'),
     cert: fs.readFileSync(path.join(__dirname, './config') + '/cert.pem')
 };
@@ -30,7 +28,7 @@ typeorm_1.createConnection({
     password: "",
     database: "webcrawl",
     entities: [
-        Todo_1.default
+        CrawlModel_1.default
     ],
     synchronize: true,
     logging: false

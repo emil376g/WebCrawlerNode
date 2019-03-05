@@ -2,14 +2,12 @@
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import * as https from 'https';
-import Todo from './models/Todo';
+import CrawlModelMySql from './models/CrawlModel';
 import * as fs from 'fs';
 var path = require('path');
 const PORT = 54321;
 
 const httpsOptions = {
-    //key: fs.readFileSync('C:/Users/emil376g/source/repos/WebCrawlerNode/WebCrawlerNode/lib/config/key.pem'),
-    //cert: fs.readFileSync('C:/Users/emil376g/source/repos/WebCrawlerNode/WebCrawlerNode/lib/config/cert.pem')
     key: fs.readFileSync(path.join(__dirname, './config') + '/key.pem'),
     cert: fs.readFileSync(path.join(__dirname, './config') + '/cert.pem')
 }
@@ -21,12 +19,12 @@ createConnection({
     password: "",
     database: "webcrawl",
     entities: [
-        Todo
+        CrawlModelMySql
     ],
     synchronize: true,
     logging: false
 }).then(async () => {
     https.createServer(httpsOptions, app).listen(PORT, () => {
         console.log('Express server listening on port ' + PORT);
-    })
+        })
     }).catch((error) => console.log(error));

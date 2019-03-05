@@ -12,11 +12,11 @@ const mongoose = require("mongoose");
 const crmModel_1 = require("../models/crmModel");
 const typeorm_1 = require("typeorm");
 const puppeteer = require('puppeteer');
-const Todo_1 = require("../models/Todo");
+const model = require("../models/CrawlModel");
 let repository;
 const initialize = () => {
     const connection = typeorm_1.getConnection();
-    repository = connection.getRepository(Todo_1.default);
+    repository = connection.getRepository(model.CrawlModelMySql);
 };
 const Crawl = mongoose.model('CrawlData', crmModel_1.WebsiteSchema);
 class ContactController {
@@ -25,17 +25,17 @@ class ContactController {
             if (repository === undefined) {
                 initialize();
             }
-            const todo = new Todo_1.default();
-            todo.date = req.body[0].date;
-            todo.title = req.body[0].title;
-            todo.place = req.body[0].place;
-            todo.url = req.body[0].url;
-            todo.crawlClass = req.body[0].crawlClass;
-            todo.datastructur = req.body[0].datastructur;
-            todo.description = req.body[0].description;
-            yield repository.save(todo);
-            console.log(req.body);
-            console.log(todo);
+            //mysql add
+            //const crawlModelMySql = new model.CrawlModelMySql();
+            //crawlModelMySql.date = req.body[0].date;
+            //crawlModelMySql.title = req.body[0].title;
+            //crawlModelMySql.place = req.body[0].place;
+            //crawlModelMySql.url = req.body[0].url;
+            //crawlModelMySql.crawlClass = req.body[0].crawlClass;
+            //crawlModelMySql.datastructur = req.body[0].datastructur;
+            //crawlModelMySql.description = req.body[0].description;
+            //await repository.save(crawlModelMySql);
+            //default i will go for is mongoDB
             let newContact = new Crawl({
                 _id: new mongoose.Types.ObjectId(),
                 date: req.body[0].date,
@@ -87,12 +87,11 @@ class ContactController {
 exports.ContactController = ContactController;
 function crawl(url, selector) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(selector);
         const selectors = selector;
         const browser = yield puppeteer.launch({ headless: true });
         const page = yield browser.newPage();
         yield page.goto(url);
-        yield page.waitFor(6000);
+        yield page.waitFor(3000);
         const result = yield page.evaluate((selectors) => {
             selectors = selectors;
             console.log(selectors);

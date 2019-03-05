@@ -11,7 +11,8 @@
     "baseUrl": "./lib"
   },
   "include": [
-    "lib/**/*.ts"
+    "lib/**/*.ts",
+    "lib/**/*.pem"
   ],
   "exclude": [
     "node_modules"

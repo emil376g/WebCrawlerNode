@@ -3,12 +3,12 @@ import { WebsiteSchema } from '../models/crmModel';
 import { getConnection, Repository } from 'typeorm';
 import { Request, Response } from 'express';
 const puppeteer = require('puppeteer');
-import Todo from '../models/Todo';
+import * as model from '../models/CrawlModel';
 
-let repository: Repository<Todo>;
+let repository: Repository<model.CrawlModelMySql>;
 const initialize = () => {
     const connection = getConnection();
-    repository = connection.getRepository(Todo);
+    repository = connection.getRepository(model.CrawlModelMySql);
 };
 const Crawl = mongoose.model('CrawlData', WebsiteSchema);
 export class ContactController {
@@ -17,17 +17,17 @@ export class ContactController {
         if (repository === undefined) {
             initialize();
         }
-        const todo = new Todo();
-        todo.date = req.body[0].date;
-        todo.title = req.body[0].title;
-        todo.place = req.body[0].place;
-        todo.url = req.body[0].url;
-        todo.crawlClass = req.body[0].crawlClass;
-        todo.datastructur = req.body[0].datastructur;
-        todo.description = req.body[0].description;
-        await repository.save(todo);
-        console.log(req.body);
-        console.log(todo)
+        //mysql add
+        //const crawlModelMySql = new model.CrawlModelMySql();
+        //crawlModelMySql.date = req.body[0].date;
+        //crawlModelMySql.title = req.body[0].title;
+        //crawlModelMySql.place = req.body[0].place;
+        //crawlModelMySql.url = req.body[0].url;
+        //crawlModelMySql.crawlClass = req.body[0].crawlClass;
+        //crawlModelMySql.datastructur = req.body[0].datastructur;
+        //crawlModelMySql.description = req.body[0].description;
+        //await repository.save(crawlModelMySql);
+        //default i will go for is mongoDB
         let newContact = new Crawl({
             _id: new mongoose.Types.ObjectId(),
             date: req.body[0].date,
@@ -73,12 +73,11 @@ export class ContactController {
     }
 }
 async function crawl(url: string, selector: string): Promise<any> {
-    console.log(selector);
     const selectors = selector
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(url);
-    await page.waitFor(6000);
+    await page.waitFor(3000);
     const result = await page.evaluate((selectors) => {
         selectors = selectors;
         console.log(selectors)

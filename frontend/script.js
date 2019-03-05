@@ -1,8 +1,9 @@
 $(document).ready(function() {
     var rep;
+    var pattern = $('#pattern');
     $("#postdata").hide();
-    $("#form2").hide();
-    $('#form1').submit(function(e) {
+    $("#response").hide();
+    $('#WebCrawlCaller').submit(function(e) {
 
         e.preventDefault();
         var settings = {
@@ -20,7 +21,7 @@ $(document).ready(function() {
         };
 
         $.ajax(settings).done(function(response) {
-            $("#form2").show();
+            $("#response").show();
             $("#postdata").show();
             rep = JSON.parse(JSON.stringify(response));
             console.log(JSON.stringify(rep));
@@ -31,13 +32,13 @@ $(document).ready(function() {
             });
         });
     });
-    $("#mønster").change(function(e) {
+    pattern.change(function(e) {
         e.preventDefault();
         $('#data').html('');
         $('#data').append('<tr></tr>');
-        for (let p = 0; p < $("#mønster").val().length; p++) {
+        for (let p = 0; p < pattern.val().length; p++) {
 
-            switch ($("#mønster").val().charAt(p)) {
+            switch (pattern.val().charAt(p)) {
                 case 'd':
                     $('#data tr:first').append('<th class="date">date</th>');
                     break;
@@ -59,13 +60,12 @@ $(document).ready(function() {
 
             for (let index = 0; index < rep[j].length / 4; index++) {
                 $('#data tr:last').after('<tr class="data"></tr>');
-                for (let k = 0; k < $("#mønster").val().length; k++) {
-                    if ($("#mønster").val().charAt(k) == 'd' || $("#mønster").val().charAt(k) == 'b' || $("#mønster").val().charAt(k) == 't' || $("#mønster").val().charAt(k) == 'p') {
-                        $("#data tr:last").append('<td><input class="' + $('#mønster').val().charAt(k) + '" type="text"></td>');
+                for (let k = 0; k < pattern.val().length; k++) {
+                    if (pattern.val().charAt(k) == 'd' || pattern.val().charAt(k) == 'b' || pattern.val().charAt(k) == 't' || pattern.val().charAt(k) == 'p') {
+                        $("#data tr:last").append('<td><input class="' + pattern.val().charAt(k) + '" type="text"></td>');
                     }
                 }
                 for (let index2 = 0; index2 < $('#data tr:last').children().length; index2++) {
-                    console.log(i)
                     if ($('#data tr:last').children()[index2].value == '')
                         i++;
                     if (i >= 4) {
@@ -75,30 +75,24 @@ $(document).ready(function() {
             }
         }
         for (let index1 = 0; index1 < rep.length; index1++) {
-            let indexer = 0;
-            for (let index2 = 0; index2 < rep[index1].length / 4; index2++) {
-                for (let index = 0; index < $('#mønster').val().length; index++) {
-                    switch ($("#mønster").val().charAt(index)) {
+            for (let index2 = 0; index2 < rep[index1].length / pattern.val().length; index2++) {
+                for (let index = 0; index < pattern.val().length; index++) {
+                    switch (pattern.val().charAt(index)) {
                         case 'd':
-                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
-                            indexer++;
+                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
                             break;
                         case 't':
-                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
-                            indexer++;
+                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
                             break;
                         case 'b':
-                            if (JSON.stringify(rep[index1][indexer]) != undefined) {
-                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
-                                indexer++;
+                            if (JSON.stringify(rep[index1][index2]) != undefined) {
+                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
                             }
                             break;
                         case 'p':
-                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
-                            indexer++;
+                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
                             break;
                         default:
-                            indexer++;
                             break;
                     }
                 }
@@ -110,33 +104,28 @@ $(document).ready(function() {
         var json = [];
 
         for (let element = 0; element < $("#data").children().length; element++) {
-            let i = 0;
             let date;
             let title;
             let des;
             let place;
             for (let input = 0; input < 4; input++) {
                 if ($("#data").children()[element].children[input].children[0] != undefined) {
-                    switch ($("#mønster").val().charAt(i)) {
+                    switch (pattern.val().charAt(input)) {
                         case 'd':
-                            console.log($("#data").children()[element].children[input].children[0].value)
+                            console.log($("#data").children()[element].children[input].children[0].value);
                             date = $("#data").children()[element].children[input].children[0].value;
-                            i++;
                             break;
                         case 't':
-                            console.log($("#data").children()[element].children[input].children[0].value)
+                            console.log($("#data").children()[element].children[input].children[0].value);
                             title = $("#data").children()[element].children[input].children[0].value;
-                            i++;
                             break;
                         case 'b':
-                            console.log($("#data").children()[element].children[input].children[0].value)
+                            console.log($("#data").children()[element].children[input].children[0].value);
                             des = $("#data").children()[element].children[input].children[0].value;
-                            i++;
                             break;
                         case 'p':
-                            console.log($("#data").children()[element].children[input].children[0].value)
+                            console.log($("#data").children()[element].children[input].children[0].value);
                             place = $("#data").children()[element].children[input].children[0].value;
-                            i++;
                             break;
                         default:
                             break;
@@ -144,7 +133,15 @@ $(document).ready(function() {
                 }
             }
             if (title != undefined && place != undefined && date != undefined) {
-                json.push({ date: date, place: place, title: title, description: des, url: $("#url").val(), datastructur: $("#mønster").val(), crawlClass: $("#selector").val() })
+                json.push({
+                    date: date,
+                    place: place,
+                    title: title,
+                    description: des,
+                    url: $("#url").val(),
+                    datastructur: pattern.val(),
+                    crawlClass: $("#selector").val()
+                });
                 console.log(JSON.stringify(json));
                 var settings = {
                     "async": true,
@@ -156,27 +153,23 @@ $(document).ready(function() {
                     },
                     "processData": false,
                     "data": JSON.stringify(json)
-                }
+                };
 
                 $.ajax(settings).done(function(response) {
-                    console.log(response);
+
                 });
-                // $.post("https://127.0.0.1:54321/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e", JSON.stringify(json), function(data) {
-                //     console.log(data);
-                // })
                 json = [];
             }
         }
-    })
+    });
     $('#dump').change(function(e) {
         e.preventDefault();
-        let array = [];
-        let array2 = []
+        let tempPlaceHolder = [];
+        let result = [];
         for (let index = 0; index < $("#dump").val().split('\n').length; index++) {
-            array.push($("#dump").val().split('\n')[index]);
+            tempPlaceHolder.push($("#dump").val().split('\n')[index]);
         }
-        array2.push(array);
-        rep = array2;
-        console.log(JSON.stringify(rep));
+        result.push(tempPlaceHolder);
+        rep = result;
     });
 });

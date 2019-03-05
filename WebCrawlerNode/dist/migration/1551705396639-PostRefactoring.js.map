@@ -1,1 +1,0 @@
-{"version":3,"file":"1551705396639-PostRefactoring.js","sourceRoot":"","sources":["../../lib/migration/1551705396639-PostRefactoring.ts"],"names":[],"mappings":";;;;;;;;;;AAEA,MAAa,uBAAuB;IAEnB,EAAE,CAAC,WAAwB;;YACpC,MAAM,WAAW,CAAC,KAAK,CAAC,qSAAqS,CAAC,CAAC;QACnU,CAAC;KAAA;IAEY,IAAI,CAAC,WAAwB;;YACtC,MAAM,WAAW,CAAC,KAAK,CAAC,iBAAiB,CAAC,CAAC;QAC/C,CAAC;KAAA;CAEJ;AAVD,0DAUC"}
