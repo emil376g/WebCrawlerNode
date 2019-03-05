@@ -5,4 +5,4 @@ setup
 3) open cmd in the server folder name "WebCrawlerNode" run the server with the command npm run dev.
 4) open the html file.
 
-5) hover over selector or and pattern to get extanded tool tip
+5) hover over selector or and pattern to get extanded tool tip (in the html page)
