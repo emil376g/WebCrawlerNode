@@ -1,8 +1,9 @@
 ﻿import app from "./app";
-import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import * as https from 'https';
-import CrawlModelMySql from './models/CrawlModel';
+import CrawlModel from './models/CrawlModel';
+import CrawledWebsite from './models/CrawledWebsite';
+import { PlaceModel, Url, DataStructure, crawlClass } from './models/DetailedModel';
 import * as fs from 'fs';
 var path = require('path');
 const PORT = 54321;
@@ -19,12 +20,17 @@ createConnection({
     password: "",
     database: "webcrawl",
     entities: [
-        CrawlModelMySql
+        CrawlModel,
+        CrawledWebsite,
+        PlaceModel,
+        Url,
+        DataStructure,
+        crawlClass
     ],
     synchronize: true,
     logging: false
 }).then(async () => {
     https.createServer(httpsOptions, app).listen(PORT, () => {
         console.log('Express server listening on port ' + PORT);
-        })
-    }).catch((error) => console.log(error));
+    })
+}).catch((error) => console.log(error));

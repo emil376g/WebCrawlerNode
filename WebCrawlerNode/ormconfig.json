@@ -11,14 +11,17 @@
   "entities": [
     "dist/models/*.js"
   ],
+  "cache": {
+    "duration": 30000
+  },
   "migrations": [
-    "dist/migration/**/*.js"
+    "dist/migration/*.js"
   ],
   "subscribers": [
-    "dist/subscriber/**/*.js"
+    "dist/subscriber/*.js"
   ],
   "cli": {
-    "entitiesDir": "lib/models/Todo",
+    "entitiesDir": "lib/models",
     "migrationsDir": "lib/migration",
     "subscribersDir": "lib/subscriber"
   }

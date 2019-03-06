@@ -10,20 +10,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const CrawlClass = require("./CrawledWebsite");
-let CrawlModelMySql = class CrawlModelMySql {
+const CrawledWebsite_1 = require("./CrawledWebsite");
+let CrawlModel = class CrawlModel {
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
-], CrawlModelMySql.prototype, "id", void 0);
+], CrawlModel.prototype, "id", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => CrawlClass.CrawledWebsite, (crawledWebsite) => crawledWebsite.id),
+    typeorm_1.OneToMany(() => CrawledWebsite_1.CrawledWebsite, (crawledWebsite) => crawledWebsite.CrawlModel),
     __metadata("design:type", Array)
-], CrawlModelMySql.prototype, "CrawledWebsite", void 0);
-CrawlModelMySql = __decorate([
+], CrawlModel.prototype, "CrawledWebsite", void 0);
+CrawlModel = __decorate([
     typeorm_1.Entity()
-], CrawlModelMySql);
-exports.CrawlModelMySql = CrawlModelMySql;
-exports.default = CrawlModelMySql;
+], CrawlModel);
+exports.CrawlModel = CrawlModel;
+exports.default = CrawlModel;
 //# sourceMappingURL=CrawlModel.js.map

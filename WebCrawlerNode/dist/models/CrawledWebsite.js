@@ -10,7 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const detailed = require("./DetailedModel");
+const DetailedModel_1 = require("./DetailedModel");
+const CrawlModel_1 = require("./CrawlModel");
 let CrawledWebsite = class CrawledWebsite {
     constructor() {
         this.date = '';
@@ -28,9 +29,9 @@ __decorate([
     __metadata("design:type", String)
 ], CrawledWebsite.prototype, "date", void 0);
 __decorate([
-    typeorm_1.OneToOne(() => detailed.PlaceModel),
+    typeorm_1.OneToOne(() => DetailedModel_1.PlaceModel),
     typeorm_1.JoinColumn(),
-    __metadata("design:type", detailed.PlaceModel)
+    __metadata("design:type", DetailedModel_1.PlaceModel)
 ], CrawledWebsite.prototype, "place", void 0);
 __decorate([
     typeorm_1.Column(),
@@ -41,20 +42,24 @@ __decorate([
     __metadata("design:type", String)
 ], CrawledWebsite.prototype, "description", void 0);
 __decorate([
-    typeorm_1.OneToOne(() => detailed.Url),
+    typeorm_1.OneToOne(() => DetailedModel_1.Url),
     typeorm_1.JoinColumn(),
-    __metadata("design:type", detailed.Url)
+    __metadata("design:type", DetailedModel_1.Url)
 ], CrawledWebsite.prototype, "url", void 0);
 __decorate([
-    typeorm_1.OneToOne(() => detailed.DataStructure),
+    typeorm_1.OneToOne(() => DetailedModel_1.DataStructure),
     typeorm_1.JoinColumn(),
-    __metadata("design:type", detailed.DataStructure)
+    __metadata("design:type", DetailedModel_1.DataStructure)
 ], CrawledWebsite.prototype, "datastructur", void 0);
 __decorate([
-    typeorm_1.OneToOne(() => detailed.crawlClass),
+    typeorm_1.OneToOne(() => DetailedModel_1.crawlClass),
     typeorm_1.JoinColumn(),
-    __metadata("design:type", detailed.crawlClass)
+    __metadata("design:type", DetailedModel_1.crawlClass)
 ], CrawledWebsite.prototype, "crawlClass", void 0);
+__decorate([
+    typeorm_1.ManyToOne(type => CrawlModel_1.CrawlModel, crawlBase => crawlBase.CrawledWebsite),
+    __metadata("design:type", CrawlModel_1.CrawlModel)
+], CrawledWebsite.prototype, "CrawlModel", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Date)

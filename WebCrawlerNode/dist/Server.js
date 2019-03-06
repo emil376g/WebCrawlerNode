@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("./app");
-require("reflect-metadata");
 const typeorm_1 = require("typeorm");
 const https = require("https");
 const CrawlModel_1 = require("./models/CrawlModel");
+const CrawledWebsite_1 = require("./models/CrawledWebsite");
+const DetailedModel_1 = require("./models/DetailedModel");
 const fs = require("fs");
 var path = require('path');
 const PORT = 54321;
@@ -28,7 +29,12 @@ typeorm_1.createConnection({
     password: "",
     database: "webcrawl",
     entities: [
-        CrawlModel_1.default
+        CrawlModel_1.default,
+        CrawledWebsite_1.default,
+        DetailedModel_1.PlaceModel,
+        DetailedModel_1.Url,
+        DetailedModel_1.DataStructure,
+        DetailedModel_1.crawlClass
     ],
     synchronize: true,
     logging: false

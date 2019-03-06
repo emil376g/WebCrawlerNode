@@ -60,7 +60,6 @@
     <TypeScriptCompile Include="lib\controllers\crmController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\migration\1551792672240-WebCrawl.ts" />
     <TypeScriptCompile Include="lib\models\CrawledWebsite.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -69,6 +68,9 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="lib\models\CrawlModel.ts" />
     <TypeScriptCompile Include="lib\models\DetailedModel.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="lib\models\exporter.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="lib\routes\crmRoutes.ts">

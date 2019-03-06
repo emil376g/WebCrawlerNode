@@ -16,7 +16,7 @@ const model = require("../models/CrawlModel");
 let repository;
 const initialize = () => {
     const connection = typeorm_1.getConnection();
-    repository = connection.getRepository(model.CrawlModelMySql);
+    repository = connection.getRepository(model.CrawlModel);
 };
 const Crawl = mongoose.model('CrawlData', crmModel_1.WebsiteSchema);
 class ContactController {

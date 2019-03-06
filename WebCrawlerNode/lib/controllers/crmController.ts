@@ -5,10 +5,10 @@ import { Request, Response } from 'express';
 const puppeteer = require('puppeteer');
 import * as model from '../models/CrawlModel';
 
-let repository: Repository<model.CrawlModelMySql>;
+let repository: Repository<model.CrawlModel>;
 const initialize = () => {
     const connection = getConnection();
-    repository = connection.getRepository(model.CrawlModelMySql);
+    repository = connection.getRepository(model.CrawlModel);
 };
 const Crawl = mongoose.model('CrawlData', WebsiteSchema);
 export class ContactController {

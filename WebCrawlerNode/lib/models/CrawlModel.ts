@@ -1,11 +1,12 @@
-﻿import {Entity, Tree, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import * as CrawlClass from './CrawledWebsite'
+﻿import { Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { CrawledWebsite } from './CrawledWebsite'
+
 @Entity()
-export class CrawlModelMySql {
+export class CrawlModel {
     @PrimaryGeneratedColumn()
     public id: number;
-    @OneToMany(() => CrawlClass.CrawledWebsite, (crawledWebsite) => crawledWebsite.id)
-    public CrawledWebsite: CrawlClass.CrawledWebsite[];
+    @OneToMany(() => CrawledWebsite, (crawledWebsite) => crawledWebsite.CrawlModel)
+    public CrawledWebsite: CrawledWebsite[];
 }
 
-export default CrawlModelMySql;
+export default CrawlModel;

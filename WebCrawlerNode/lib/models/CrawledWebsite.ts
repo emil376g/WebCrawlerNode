@@ -1,5 +1,6 @@
-﻿import { Column, Entity, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
-import * as detailed from './DetailedModel'
+﻿import { Column, Entity, OneToOne, JoinColumn, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { PlaceModel, Url, DataStructure, crawlClass} from './DetailedModel'
+import { CrawlModel } from './CrawlModel';
 @Entity()
 export class CrawledWebsite {
     @PrimaryGeneratedColumn()
@@ -8,9 +9,9 @@ export class CrawledWebsite {
     @Column()
     public date: string = '';
 
-    @OneToOne(() => detailed.PlaceModel)
+    @OneToOne(() => PlaceModel)
     @JoinColumn()
-    public place: detailed.PlaceModel;
+    public place: PlaceModel;
 
     @Column()
     public title: string = '';
@@ -18,17 +19,21 @@ export class CrawledWebsite {
     @Column()
     public description: string = '';
 
-    @OneToOne(() => detailed.Url)
+    @OneToOne(() => Url)
     @JoinColumn()
-    public url: detailed.Url;
+    public url: Url;
 
-    @OneToOne(() => detailed.DataStructure)
+    @OneToOne(() => DataStructure)
     @JoinColumn()
-    public datastructur: detailed.DataStructure;
+    public datastructur: DataStructure;
 
-    @OneToOne(() => detailed.crawlClass)
+    @OneToOne(() => crawlClass)
     @JoinColumn()
-    public crawlClass: detailed.crawlClass;
+    public crawlClass: crawlClass;
+
+    @ManyToOne(type => CrawlModel, crawlBase => crawlBase.CrawledWebsite)
+    public CrawlModel: CrawlModel;
+
 
     @Column()
     public created_date: Date = new Date();

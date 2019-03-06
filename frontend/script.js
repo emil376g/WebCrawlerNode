@@ -74,25 +74,31 @@ $(document).ready(function() {
                 }
             }
         }
+        let indexer = 0;
         for (let index1 = 0; index1 < rep.length; index1++) {
             for (let index2 = 0; index2 < rep[index1].length / pattern.val().length; index2++) {
                 for (let index = 0; index < pattern.val().length; index++) {
                     switch (pattern.val().charAt(index)) {
                         case 'd':
-                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
+                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            indexer++;
                             break;
                         case 't':
-                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
+                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            indexer++;
                             break;
                         case 'b':
                             if (JSON.stringify(rep[index1][index2]) != undefined) {
-                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
+                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             }
+                            indexer++;
                             break;
                         case 'p':
-                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][index2]));
+                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            indexer++;
                             break;
                         default:
+                            indexer++;
                             break;
                     }
                 }
