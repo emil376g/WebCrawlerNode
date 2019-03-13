@@ -7,7 +7,7 @@ const typeorm_1 = require("typeorm");
 const puppeteer = require("puppeteer");
 const model = require("../models/CrawlModel");
 let repository;
-const crawledPages = new Map();
+let crawledPages = new Map();
 let URL;
 let browser;
 const DEPTH = parseInt(process.env.DEPTH) || 30;
@@ -74,7 +74,7 @@ class ContactController {
 exports.ContactController = ContactController;
 function crawl(url, selector) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        browser = yield puppeteer.launch({ headless: false });
+        browser = yield puppeteer.launch({ headless: true });
         URL = url;
         let data = [];
         data = yield crawlStarter(selector);
@@ -136,12 +136,11 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                 let data = [];
                 let elements = document.querySelectorAll(selectors);
                 elements.forEach(function (element) {
-                    data.push(crawlStarter(element));
+                    data = crawlStarter(element);
                 });
                 return data;
             }, selector);
             data.push(result);
-            console.log(result);
             let anchors = yield newPage.evaluate((selector) => {
                 function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
                     const allElements = [];
@@ -150,11 +149,11 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                         for (let i = 0, el; el = nodes[i]; ++i) {
                             allElements.push(el);
                             if (el.shadowRoot) {
-                                findAllElements(el.shadowRoot.querySelectorAll(selector));
+                                findAllElements(el.shadowRoot.querySelectorAll('*'));
                             }
                         }
                     };
-                    findAllElements(document.querySelectorAll(selector));
+                    findAllElements(document.querySelectorAll('*'));
                     const filtered = allElements
                         .filter(el => el.localName === 'a' && el.href)
                         .filter(el => el.href !== location.href)
@@ -178,6 +177,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
         for (const childPage of page.children) {
             return yield recursiveCrawl(browser, childPage, selector, data, depth + 1);
         }
+        crawledPages = null;
         return data;
     });
 }

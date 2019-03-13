@@ -1,9 +1,14 @@
 $(document).ready(function() {
     var rep;
     var pattern = $('#pattern');
+    $('#data').hide();
+    $('#result').hide();
+    $('#searcing').hide();
     $("#postdata").hide();
     $("#response").hide();
     $('#WebCrawlCaller').submit(function(e) {
+        $("#WebCrawlCaller").hide();
+        $('#searcing').show();
 
         e.preventDefault();
         var settings = {
@@ -21,9 +26,9 @@ $(document).ready(function() {
         };
 
         $.ajax(settings).done(function(response) {
-            $("#WebCrawlCaller").hide();
+            $('#searcing').hide();
+
             $("#response").show();
-            $("#postdata").show();
             rep = JSON.parse(JSON.stringify(response));
             console.log(JSON.stringify(rep));
             rep.forEach(element => {
@@ -34,6 +39,9 @@ $(document).ready(function() {
         });
     });
     pattern.change(function(e) {
+        $('#result').show();
+        $("#postdata").show();
+        $('#data').show();
         e.preventDefault();
         $('#data').html('');
         $('#data').append('<tr></tr>');
@@ -41,16 +49,16 @@ $(document).ready(function() {
 
             switch (pattern.val().charAt(p)) {
                 case 'd':
-                    $('#data tr:first').append('<th class="date">date</th>');
+                    $('#data tr:first').append('<th class="date">Date</th>');
                     break;
                 case 't':
-                    $('#data tr:first').append('<th class="title">title</th>');
+                    $('#data tr:first').append('<th class="title">Title</th>');
                     break;
                 case 'b':
-                    $('#data tr:first').append('<th class="description">description</th>');
+                    $('#data tr:first').append('<th class="description">Description</th>');
                     break;
                 case 'p':
-                    $('#data tr:first').append('<th class="place">place</th>');
+                    $('#data tr:first').append('<th class="place">Place</th>');
                     break;
                 default:
                     break;
@@ -81,21 +89,21 @@ $(document).ready(function() {
                 for (let index = 0; index < pattern.val().length; index++) {
                     switch (pattern.val().charAt(index)) {
                         case 'd':
-                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
+                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
                             break;
                         case 't':
-                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
+                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
                             break;
                         case 'b':
                             if (JSON.stringify(rep[index1][index2]) != undefined) {
-                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
+                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             }
                             indexer++;
                             break;
                         case 'p':
-                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
+                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
                             indexer++;
                             break;
                         default:

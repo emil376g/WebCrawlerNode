@@ -18,6 +18,7 @@
         <div class="row">
             <div class="col-12">
                 <form action="" id="WebCrawlCaller" class="col">
+                    <h2>Site data crawler</h2>
                     <div class="form-gorup row">
                         <label for="url">url</label>
                         <input type="text" id="url" class="form-control">
@@ -27,9 +28,11 @@
                     </div>
                 </form>
             </div>
+            <h3 id="searcing">searcing</h3>
             <div class="col-12">
-                <form action="" id="response" class="row">
-                    <div class="col">
+                <form action="" id="response" class="mb-5">
+                    <h2>Output data</h2>
+                    <div class="col p-0">
                         <div class="row">
                             <div class="col">
                                 <label for="dump">data</label>
@@ -42,7 +45,8 @@
                         </div>
                     </div>
                 </form>
-                <table id="data" class="table">
+                <h3 id="result">result</h3>
+                <table id="data" class="table mt-2">
                 </table>
                 <button class="btn btn-primary" id="postdata">send data</button>
             </div>

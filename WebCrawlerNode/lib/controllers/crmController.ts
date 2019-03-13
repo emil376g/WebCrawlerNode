@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import * as puppeteer from 'puppeteer'
 import * as model from '../models/CrawlModel';
 let repository: Repository<model.CrawlModel>;
-const crawledPages = new Map();
+let crawledPages = new Map();
 let URL;
 let browser;
 const DEPTH = parseInt(process.env.DEPTH) || 30;
@@ -141,12 +141,11 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
             let data: any[] = [];
             let elements = document.querySelectorAll(selectors);
             elements.forEach(function (element) {
-                data.push(crawlStarter(element));
+                data = crawlStarter(element);
             })
             return data;
         }, selector);
         data.push(result);
-        console.log(result);
         let anchors = await newPage.evaluate((selector) => {
             function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
                 const allElements = [];
@@ -157,11 +156,11 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
                         allElements.push(el);
                         // If the element has a shadow root, dig deeper.
                         if (el.shadowRoot) {
-                            findAllElements(el.shadowRoot.querySelectorAll(selector));
+                            findAllElements(el.shadowRoot.querySelectorAll('*'));
                         }
                     }
                 };
-                findAllElements(document.querySelectorAll(selector));
+                findAllElements(document.querySelectorAll('*'));
                 const filtered = allElements
                     .filter(el => el.localName === 'a' && el.href) // element is an anchor with an href.
                     .filter(el => el.href !== location.href) // link doesn't point to page's own URL.
@@ -188,5 +187,6 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
     for (const childPage of page.children) {
         return await recursiveCrawl(browser, childPage, selector, data, depth + 1);
     }
+    crawledPages = null;
     return data;
 }
