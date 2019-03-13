@@ -21,6 +21,7 @@ $(document).ready(function() {
         };
 
         $.ajax(settings).done(function(response) {
+            $("#WebCrawlCaller").hide();
             $("#response").show();
             $("#postdata").show();
             rep = JSON.parse(JSON.stringify(response));
@@ -80,21 +81,21 @@ $(document).ready(function() {
                 for (let index = 0; index < pattern.val().length; index++) {
                     switch (pattern.val().charAt(index)) {
                         case 'd':
-                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            $('.d:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
                             indexer++;
                             break;
                         case 't':
-                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            $('.t:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
                             indexer++;
                             break;
                         case 'b':
                             if (JSON.stringify(rep[index1][index2]) != undefined) {
-                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                                $('.b:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
                             }
                             indexer++;
                             break;
                         case 'p':
-                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]));
+                            $('.p:eq(' + index2 + ')').val(JSON.stringify(rep[index1][indexer]).substring(1, JSON.stringify(rep[index1][indexer].length)));
                             indexer++;
                             break;
                         default:

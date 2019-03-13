@@ -1,12 +1,13 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express = require("express");
-const bodyParser = require("body-parser");
-const crmRoutes_1 = require("./routes/crmRoutes");
-const mongoose = require("mongoose");
+exports.__esModule = true;
+var express = require("express");
+var bodyParser = require("body-parser");
+var crmRoutes_1 = require("./routes/crmRoutes");
+var mongoose = require("mongoose");
 require("reflect-metadata");
-class App {
-    constructor() {
+// Create a new express application instance
+var App = /** @class */ (function () {
+    function App() {
         this.routePrv = new crmRoutes_1.Routes();
         this.mongoUrl = 'mongodb://localhost/OperaData';
         this.app = express();
@@ -14,11 +15,12 @@ class App {
         this.routePrv.routes(this.app);
         this.mongoSetup();
     }
-    mongoSetup() {
+    App.prototype.mongoSetup = function () {
         mongoose.Promise = global.Promise;
         mongoose.connect(this.mongoUrl, { useNewUrlParser: true });
-    }
-    config() {
+    };
+    App.prototype.config = function () {
+        // support application/json type post data
         this.app.use(bodyParser.json());
         this.app.use(function (req, res, next) {
             res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,7 +29,7 @@ class App {
             next();
         });
         this.app.use(bodyParser.urlencoded({ extended: false }));
-    }
-}
-exports.default = new App().app;
-//# sourceMappingURL=app.js.map
+    };
+    return App;
+}());
+exports["default"] = new App().app;

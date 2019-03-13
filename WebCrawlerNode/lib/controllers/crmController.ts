@@ -2,10 +2,14 @@
 import { WebsiteSchema } from '../models/crmModel';
 import { getConnection, Repository } from 'typeorm';
 import { Request, Response } from 'express';
-const puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer'
 import * as model from '../models/CrawlModel';
-
 let repository: Repository<model.CrawlModel>;
+const crawledPages = new Map();
+let URL;
+let browser;
+const DEPTH = parseInt(process.env.DEPTH) || 30;
+const maxDepth = DEPTH; // Subpage depth to crawl site.
 const initialize = () => {
     const connection = getConnection();
     repository = connection.getRepository(model.CrawlModel);
@@ -73,41 +77,116 @@ export class ContactController {
     }
 }
 async function crawl(url: string, selector: string): Promise<any> {
-    const selectors = selector
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.goto(url);
-    await page.waitFor(3000);
-    const result = await page.evaluate((selectors) => {
-        selectors = selectors;
-        console.log(selectors)
-        let crawlStarter = function (element: ChildNode): any[] {
-            let data: any[] = [];
+    browser = await puppeteer.launch({ headless: true });
+    URL = url;
+    let data: any[] = [];
+    data = await crawlStarter(selector)
+    return data;
+}
 
-            data = recursiveCrawl(element, data);
+async function crawlStarter(selector): Promise<any[]> {
+    let data: any[] = [];
+    const root = { url: URL };
+    selector = selector;
+    data = await recursiveCrawl(browser, root, selector, data);
+    return data;
+}
 
-            return data;
-        }
-        let recursiveCrawl = function (element: ChildNode, data: any[]) {
-            if (element.hasChildNodes()) {
-                element.childNodes.forEach(function (child: ChildNode) {
-                    recursiveCrawl(child, data);
-                });
-            } else {
-                if (element.nodeType != 8 && element.textContent.replace(/\s/g, "") != "") {
-                    data.push(element.textContent);
-                }
-            }
-            return data;
-        }
-
-        let data: any[] = [];
-        let elements = document.querySelectorAll(selectors);
-        elements.forEach(function (element) {
-            data.push(crawlStarter(element));
-        })
+async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
+    if (depth > maxDepth) {
         return data;
-    }, selectors);
-    await browser.close();
-    return result;
-};
+    }
+    // If we've already crawled the URL, we know its children.
+    if (crawledPages.has(page.url)) {
+        console.log(`Reusing route: ${page.url}`);
+        const item = crawledPages.get(page.url);
+        page.title = item.title;
+        page.img = item.img;
+        page.children = item.children;
+        // Fill in the children with details (if they already exist).
+        page.children.forEach(c => {
+            const item = crawledPages.get(c.url);
+            c.title = item ? item.title : '';
+            c.img = item ? item.img : null;
+        });
+        return data;
+    } else {
+        console.log(`Loading: ${page.url}`);
+
+        const newPage = await browser.newPage();
+        await newPage.goto(page.url, { waitUntil: 'networkidle2' });
+        await newPage.waitFor(5000);
+        let result = await newPage.evaluate((selectors) => {
+            selectors = selectors;
+            let crawlStarter = function (element: ChildNode): any[] {
+                let data: any[] = [];
+
+                data = recursiveCrawl(element, data);
+
+                return data;
+            }
+            let recursiveCrawl = function (element: ChildNode, data: any[]) {
+                if (element.hasChildNodes()) {
+                    element.childNodes.forEach(function (child: ChildNode) {
+                        recursiveCrawl(child, data);
+                    });
+                } else {
+                    if (element.nodeType != 8 && element.textContent.replace(/\s/g, "") != "") {
+                        data.push(element.textContent);
+                    }
+                }
+                return data;
+            }
+
+            let data: any[] = [];
+            let elements = document.querySelectorAll(selectors);
+            elements.forEach(function (element) {
+                data.push(crawlStarter(element));
+            })
+            return data;
+        }, selector);
+        data.push(result);
+        console.log(result);
+        let anchors = await newPage.evaluate((selector) => {
+            function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
+                const allElements = [];
+                console.log(allElements);
+
+                const findAllElements = function (nodes) {
+                    for (let i = 0, el; el = nodes[i]; ++i) {
+                        allElements.push(el);
+                        // If the element has a shadow root, dig deeper.
+                        if (el.shadowRoot) {
+                            findAllElements(el.shadowRoot.querySelectorAll(selector));
+                        }
+                    }
+                };
+                findAllElements(document.querySelectorAll(selector));
+                const filtered = allElements
+                    .filter(el => el.localName === 'a' && el.href) // element is an anchor with an href.
+                    .filter(el => el.href !== location.href) // link doesn't point to page's own URL.
+                    .filter(el => {
+                        if (sameOrigin) {
+                            return new URL(location).origin === new URL(el.href).origin;
+                        }
+                        return true;
+                    })
+                    .map(a => a.href);
+
+                return Array.from(new Set(filtered));
+            }
+            return collectAllSameOriginAnchorsDeep(selector);
+        }, selector);
+        anchors = anchors.filter(a => a !== URL) // link doesn't point to start url of crawl.
+
+        page.title = await newPage.evaluate('document.title');
+        page.children = anchors.map(url => ({ url }));
+
+        crawledPages.set(page.url, page); // cache it.
+        await newPage.close();
+    }
+    for (const childPage of page.children) {
+        return await recursiveCrawl(browser, childPage, selector, data, depth + 1);
+    }
+    return data;
+}

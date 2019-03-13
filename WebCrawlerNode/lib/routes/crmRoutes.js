@@ -1,13 +1,14 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const crmController_1 = require("../controllers/crmController");
-class Routes {
-    constructor() {
+exports.__esModule = true;
+var crmController_1 = require("../controllers/crmController");
+var Routes = /** @class */ (function () {
+    function Routes() {
         this.contactController = new crmController_1.ContactController();
     }
-    routes(app) {
+    Routes.prototype.routes = function (app) {
         app.route('/Crawl')
-            .get((req, res, next) => {
+            .get(function (req, res, next) {
+            // middleware          
             if (req.query.key !== '78942ef2c1c98bf10fca09c808d718fa3734703e') {
                 res.status(401).send('You shall not pass!');
             }
@@ -15,7 +16,7 @@ class Routes {
                 next();
             }
         }, this.contactController.getCrawl)
-            .post((req, res, next) => {
+            .post(function (req, res, next) {
             if (req.query.key !== '78942ef2c1c98bf10fca09c808d718fa3734703e') {
                 res.status(401).send('You shall not pass!');
             }
@@ -23,7 +24,7 @@ class Routes {
                 next();
             }
         }, this.contactController.addNewCrawl);
-    }
-}
+    };
+    return Routes;
+}());
 exports.Routes = Routes;
-//# sourceMappingURL=crmRoutes.js.map

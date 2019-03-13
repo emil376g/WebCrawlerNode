@@ -2,10 +2,9 @@
 import * as bodyParser from "body-parser";
 import { Routes } from "./routes/crmRoutes";
 import * as mongoose from "mongoose";
-
+import "reflect-metadata";
 // Create a new express application instance
 class App {
-
     public app: express.Application;
     public routePrv: Routes = new Routes();
     public mongoUrl: string = 'mongodb://localhost/OperaData';
@@ -34,6 +33,4 @@ class App {
     }
 
 }
-
-
 export default new App().app;

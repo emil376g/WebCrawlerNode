@@ -1,13 +1,13 @@
-﻿import * as mongoose from 'mongoose';
-
-const Schema = mongoose.Schema;
-
-export const WebsiteSchema = new Schema({
+"use strict";
+exports.__esModule = true;
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
+exports.WebsiteSchema = new Schema({
     date: {
-        type: String,
+        type: String
     },
     place: {
-        type: String,
+        type: String
     },
     title: {
         type: String
@@ -26,6 +26,6 @@ export const WebsiteSchema = new Schema({
     },
     created_date: {
         type: Date,
-        default: Date.now
+        "default": Date.now
     }
-})
+});

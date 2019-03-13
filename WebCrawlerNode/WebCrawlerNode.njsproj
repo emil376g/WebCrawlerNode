@@ -60,19 +60,6 @@
     <TypeScriptCompile Include="lib\controllers\crmController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\models\CrawledWebsite.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\models\crmModel.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\models\CrawlModel.ts" />
-    <TypeScriptCompile Include="lib\models\DetailedModel.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\models\exporter.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="lib\routes\crmRoutes.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

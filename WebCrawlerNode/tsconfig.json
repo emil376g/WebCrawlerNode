@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "pretty": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
     "sourceMap": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "declaration": true,
     "target": "es6",
+    "baseUrl": "./lib",
     "outDir": "./dist",
-    "baseUrl": "./lib"
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": false,
+    "pretty": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "importHelpers": true
   },
   "include": [
+    "lib/*.ts",
     "lib/**/*.ts",
     "lib/**/*.pem"
   ],

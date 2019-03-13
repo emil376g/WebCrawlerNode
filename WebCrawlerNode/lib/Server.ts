@@ -4,10 +4,11 @@ import * as https from 'https';
 import CrawlModel from './models/CrawlModel';
 import CrawledWebsite from './models/CrawledWebsite';
 import { PlaceModel, Url, DataStructure, crawlClass } from './models/DetailedModel';
+import 'reflect-metadata';
+
 import * as fs from 'fs';
 var path = require('path');
 const PORT = 54321;
-
 const httpsOptions = {
     key: fs.readFileSync(path.join(__dirname, './config') + '/key.pem'),
     cert: fs.readFileSync(path.join(__dirname, './config') + '/cert.pem')
