@@ -127,19 +127,15 @@ $(document).ready(function() {
                 if ($("#data").children()[element].children[input].children[0] != undefined) {
                     switch (pattern.val().charAt(input)) {
                         case 'd':
-                            console.log($("#data").children()[element].children[input].children[0].value);
                             date = $("#data").children()[element].children[input].children[0].value;
                             break;
                         case 't':
-                            console.log($("#data").children()[element].children[input].children[0].value);
                             title = $("#data").children()[element].children[input].children[0].value;
                             break;
                         case 'b':
-                            console.log($("#data").children()[element].children[input].children[0].value);
                             des = $("#data").children()[element].children[input].children[0].value;
                             break;
                         case 'p':
-                            console.log($("#data").children()[element].children[input].children[0].value);
                             place = $("#data").children()[element].children[input].children[0].value;
                             break;
                         default:
