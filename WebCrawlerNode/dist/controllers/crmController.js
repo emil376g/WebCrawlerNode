@@ -3,36 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const mongoose = require("mongoose");
 const crmModel_1 = require("../models/crmModel");
-const typeorm_1 = require("typeorm");
 const puppeteer = require("puppeteer");
-const model = require("../models/CrawlModel");
-let repository;
 let crawledPages = new Map();
 let URL;
 let browser;
 const DEPTH = parseInt(process.env.DEPTH) || 30;
 const maxDepth = DEPTH;
-const initialize = () => {
-    const connection = typeorm_1.getConnection();
-    repository = connection.getRepository(model.CrawlModel);
-};
 const Crawl = mongoose.model('CrawlData', crmModel_1.WebsiteSchema);
 class ContactController {
     addNewCrawl(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (repository === undefined) {
-                initialize();
+            var jsonArray = [];
+            for (var i = 0; i < req.body.length; i++) {
+                jsonArray.push({ 'data': req.body[i].data });
             }
-            let newContact = new Crawl({
-                _id: new mongoose.Types.ObjectId(),
-                date: req.body[0].date,
-                place: req.body[0].place,
-                title: req.body[0].title,
-                description: req.body[0].description,
-                url: req.body[0].url,
-                datastructur: req.body[0].datastructur,
-                crawlClass: req.body[0].crawlClass,
-            });
+            var jsonobject = {
+                data: jsonArray
+            };
+            let newContact = new Crawl(jsonobject);
             newContact.save((err, contact) => {
                 if (err) {
                     res.send(err);
@@ -74,7 +62,7 @@ class ContactController {
 exports.ContactController = ContactController;
 function crawl(url, selector) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        browser = yield puppeteer.launch({ headless: true });
+        browser = yield puppeteer.launch({ headless: false });
         URL = url;
         let data = [];
         data = yield crawlStarter(selector);
@@ -93,6 +81,7 @@ function crawlStarter(selector) {
 function recursiveCrawl(browser, page, selector, data, depth = 0) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         if (depth > maxDepth) {
+            crawledPages = new Map();
             return data;
         }
         if (crawledPages.has(page.url)) {
@@ -111,9 +100,22 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
         else {
             console.log(`Loading: ${page.url}`);
             const newPage = yield browser.newPage();
-            yield newPage.goto(page.url, { waitUntil: 'networkidle2' });
-            yield newPage.waitFor(5000);
+            yield newPage.goto(page.url, { waitUntil: 'networkidle0' });
+            yield newPage.waitFor(3000);
             let result = yield newPage.evaluate((selectors) => {
+                var parse = require('pattern-parser');
+                var patterns = [{
+                        pattern: '/(([1-2][0-9])|([1-9])|(3[0-1])) (jan|feb|mar|apr|maj|jun|jul|aug|sep|opt|nov|dec)/g',
+                        callback: function (rolls) {
+                            console.log('I will order ' + rolls + ' of toilet paper');
+                        }
+                    },
+                    {
+                        pattern: 'Remind me to {string} tomorrow',
+                        callback: function (reminder) {
+                            console.log('I will remind you to ' + reminder + ' tomorrow at noon');
+                        }
+                    }];
                 selectors = selectors;
                 let crawlStarter = function (element) {
                     let data = [];
@@ -122,12 +124,13 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                 };
                 let recursiveCrawl = function (element, data) {
                     if (element.hasChildNodes()) {
+                        parse(element.textContent, patterns);
                         element.childNodes.forEach(function (child) {
-                            recursiveCrawl(child, data);
+                            return recursiveCrawl(child, data);
                         });
                     }
                     else {
-                        if (element.nodeType != 8 && element.textContent.replace(/\s/g, "") != "") {
+                        if (element.nodeType != 8 && element) {
                             data.push(element.textContent);
                         }
                     }
@@ -136,11 +139,12 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                 let data = [];
                 let elements = document.querySelectorAll(selectors);
                 elements.forEach(function (element) {
-                    data = crawlStarter(element);
+                    data.push(crawlStarter(element));
                 });
                 return data;
             }, selector);
             data.push(result);
+            console.log(data);
             let anchors = yield newPage.evaluate((selector) => {
                 function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
                     const allElements = [];
@@ -177,7 +181,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
         for (const childPage of page.children) {
             return yield recursiveCrawl(browser, childPage, selector, data, depth + 1);
         }
-        crawledPages = null;
+        crawledPages = new Map();
         return data;
     });
 }
