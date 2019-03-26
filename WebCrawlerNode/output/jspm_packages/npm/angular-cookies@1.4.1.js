@@ -1,0 +1,1 @@
+module.exports = require("npm:angular-cookies@1.4.1/index.js");
