@@ -14,7 +14,7 @@ $(document).ready(function() {
         var settings = {
             "async": true,
             "crossDomain": true,
-            "url": "https://127.0.0.1:54321/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e",
+            "url": "https://127.0.0.1:3000/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e",
             "method": "GET",
             "headers": {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -157,7 +157,7 @@ $(document).ready(function() {
                 var settings = {
                     "async": true,
                     "crossDomain": true,
-                    "url": "https://127.0.0.1:54321/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e",
+                    "url": "https://127.0.0.1:3000/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e",
                     "method": "POST",
                     "headers": {
                         "Content-Type": "application/json"

@@ -1,1 +1,1 @@
-export declare const WebsiteSchema: any;
+export default exports;

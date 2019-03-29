@@ -2,27 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const mongoose = require("mongoose");
-const crmModel_1 = require("../models/crmModel");
-const typeorm_1 = require("typeorm");
+const model = require("../models/crmModel");
 const puppeteer = require("puppeteer");
-const model = require("../models/CrawlModel");
-let repository;
 let crawledPages = new Map();
 let URL;
 let browser;
 const DEPTH = parseInt(process.env.DEPTH) || 30;
 const maxDepth = DEPTH;
-const initialize = () => {
-    const connection = typeorm_1.getConnection();
-    repository = connection.getRepository(model.CrawlModel);
-};
-const Crawl = mongoose.model('CrawlData', crmModel_1.WebsiteSchema);
+const Crawl = mongoose.model('CrawlData', model.default.WebsiteSchema);
 class ContactController {
     addNewCrawl(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (repository === undefined) {
-                initialize();
-            }
             let newContact = new Crawl({
                 _id: new mongoose.Types.ObjectId(),
                 date: req.body[0].date,
@@ -63,18 +53,18 @@ class ContactController {
         });
     }
     deleteCrawl(req, res) {
-        Crawl.remove({ _id: req.params.contactId }, (err, contact) => {
+        Crawl.remove({ _id: req.params.contactId }, (err) => {
             if (err) {
                 res.send(err);
             }
-            res.json({ message: 'Successfully deleted contact!' + contact });
+            res.json({ message: 'Successfully deleted contact!' });
         });
     }
 }
 exports.ContactController = ContactController;
 function crawl(url, selector) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        browser = yield puppeteer.launch({ headless: true });
+        browser = yield puppeteer.launch({ headless: false });
         URL = url;
         let data = [];
         data = yield crawlStarter(selector);
@@ -127,7 +117,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                         });
                     }
                     else {
-                        if (element.nodeType != 8 && element.textContent.replace(/\s/g, "") != "") {
+                        if (element.nodeType != 8) {
                             data.push(element.textContent);
                         }
                     }
@@ -175,9 +165,9 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
             yield newPage.close();
         }
         for (const childPage of page.children) {
-            return yield recursiveCrawl(browser, childPage, selector, data, depth + 1);
+            yield recursiveCrawl(browser, childPage, selector, data, depth + 1);
         }
-        crawledPages = null;
+        crawledPages.clear();
         return data;
     });
 }

@@ -68,7 +68,7 @@ export class ContactController {
     }
 }
 async function crawl(url: string, selector: string): Promise<any> {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({ headless: false });
     URL = url;
     let data: any[] = [];
     data = await crawlStarter(selector)
@@ -122,7 +122,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
                         recursiveCrawl(child, data);
                     });
                 } else {
-                    if (element.nodeType != 8 && element.textContent.replace(/\s/g, "") != "") {
+                    if (element.nodeType != 8) {
                         data.push(element.textContent);
                     }
                 }
@@ -176,8 +176,8 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         await newPage.close();
     }
     for (const childPage of page.children) {
-        return await recursiveCrawl(browser, childPage, selector, data, depth + 1);
+        await recursiveCrawl(browser, childPage, selector, data, depth + 1);
     }
-    crawledPages = null;
+    crawledPages.clear()
     return data;
 }

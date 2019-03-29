@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 exports.WebsiteSchema = new Schema({
     date: {
-        type: String,
+        type: String
     },
     place: {
-        type: String,
+        type: String
     },
     title: {
         type: String
@@ -26,7 +26,8 @@ exports.WebsiteSchema = new Schema({
     },
     created_date: {
         type: Date,
-        default: Date.now
+        "default": Date.now
     }
 });
+exports.default = exports;
 //# sourceMappingURL=crmModel.js.map

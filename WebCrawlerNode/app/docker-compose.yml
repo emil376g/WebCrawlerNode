@@ -9,7 +9,7 @@ api:
     - /app/node_modules
   ports:
     - "0.0.0.0:9000:9000"
-  command: sh -c "mkdir -p dist && touch ./dist/app.js && nodemon --delay 500ms ./dist/app.js"
+  command: sh -c "mkdir -p ../dist && touch ../dist/Server.js && nodemon --delay 500ms ../dist/Server.js && npm run prod"
 
 transpiler:
   build: .
@@ -35,7 +35,7 @@ mocha:
   build: .
   volumes:
     - .:/app
-    - app/node_modules
+    - /app/node_modules
   links:
     - 'mongo:mongo'
   command: nodemon --delay 500ms --exec 'mocha --recursive --bail --colors' ./dist

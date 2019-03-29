@@ -5,9 +5,10 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./server.ts --importHelpers",
-    "start": "nodemon ../dist/server.js",
-    "prod": "npm run build",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+    "start": "nodemon ../dist/Server.js",
+    "prod": "npm run build && npm run start",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "description": "WebCrawlerNode",
   "author": {
@@ -45,6 +46,12 @@
     "typescript": "^3.3.3333",
     "util": "^0.11.1"
   },
+  "keywords": [
+    "typescript",
+    "node",
+    "express",
+    "docker"
+  ],
   "devDependencies": {
     "@types/mongoose": "^5.3.24"
   }
