@@ -36,36 +36,52 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="lib\config\cert.pem" />
-    <Content Include="lib\config\key.pem" />
+    <Content Include="app\.dockerignore" />
+    <Content Include="app\codeship-services.yml" />
+    <Content Include="app\codeship-steps.yml" />
+    <Content Include="app\config\cert.pem" />
+    <Content Include="app\config\chormefix.reg" />
+    <Content Include="app\config\key.pem" />
+    <Content Include="app\docker-compose.debug.yml" />
+    <Content Include="app\docker-compose.yml" />
+    <Content Include="app\Dockerfile" />
+    <Content Include="app\package-lock.json" />
+    <Content Include="app\package.json" />
+    <Content Include="app\README.md" />
+    <Content Include="app\tsconfig.json" />
+    <Content Include="app\tslint.json" />
+    <Content Include="app\yarn.lock" />
     <Content Include="ormconfig.json">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="lib\" />
-    <Folder Include="lib\models\" />
-    <Folder Include="lib\controllers\" />
-    <Folder Include="lib\config\" />
-    <Folder Include="lib\migration\" />
-    <Folder Include="lib\routes\" />
+    <Folder Include="app\" />
+    <Folder Include="app\config\" />
+    <Folder Include="app\controllers\" />
+    <Folder Include="app\dist\" />
+    <Folder Include="app\migration\" />
+    <Folder Include="app\models\" />
+    <Folder Include="app\routes\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="lib\app.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\controllers\crmController.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\routes\crmRoutes.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="lib\Server.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
+    <TypeScriptCompile Include="app\app.ts" />
+    <TypeScriptCompile Include="app\controllers\crmController.ts" />
+    <TypeScriptCompile Include="app\migration\1551863831129-crawled.ts" />
+    <TypeScriptCompile Include="app\models\crmModel.ts" />
+    <TypeScriptCompile Include="app\routes\crmRoutes.ts" />
+    <TypeScriptCompile Include="app\Server.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="app\app.js" />
+    <Compile Include="app\controllers\crmController.js" />
+    <Compile Include="app\dist\app.js" />
+    <Compile Include="app\models\CrawledWebsite.js" />
+    <Compile Include="app\models\CrawlModel.js" />
+    <Compile Include="app\models\DetailedModel.js" />
+    <Compile Include="app\routes\crmRoutes.js" />
+    <Compile Include="app\server.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
