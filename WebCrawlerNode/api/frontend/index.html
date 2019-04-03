@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+    <title>WebCrawler</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <form action="" id="WebCrawlCaller" class="col">
+                    <h2>Site data crawler</h2>
+                    <div class="form-gorup row">
+                        <label for="url">url</label>
+                        <input type="text" id="url" class="form-control">
+                        <label for="selector" title="the jquery selector that need to be crawled">selector</label>
+                        <input type="text" id="selector" class="form-control mb-1">
+                        <button type="submit" class="btn btn-primary mb-2">submit</button>
+                    </div>
+                </form>
+            </div>
+            <h3 id="searcing">searcing</h3>
+            <div class="col-12">
+                <form action="" id="response" class="mb-5">
+                    <h2>Output data</h2>
+                    <div class="col p-0">
+                        <div class="row">
+                            <div class="col">
+                                <label for="dump">data</label>
+                                <textarea name="dump" class="form-control" id="dump" cols="30" rows="10"></textarea>
+                            </div>
+                            <div class="col">
+                                <label for="pattern" title="pattern for the data is: d = date, t = title, b = description, p = place">pattern</label>
+                                <textarea name="mønster" class="form-control" id="pattern" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <h3 id="result">result</h3>
+                <table id="data" class="table mt-2">
+                </table>
+                <button class="btn btn-primary" id="postdata">send data</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

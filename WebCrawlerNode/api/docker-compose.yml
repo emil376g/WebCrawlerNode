@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    links:
+      - 'mongo:mongo'
+    environment:
+      NODE_ENV: 'development'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "65432:65432"
+    command: sh -c "mkdir -p out && touch ./out/app.js && nodemon --delay 500ms ./out/app.js"
+
+  transpiler:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["tsc", "-w"]
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    command: ["mongod"]
