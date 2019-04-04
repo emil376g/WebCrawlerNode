@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 export declare class ContactController {
     addNewCrawl(req: Request, res: Response): Promise<void>;
     getCrawl(req: Request, res: Response): Promise<void>;

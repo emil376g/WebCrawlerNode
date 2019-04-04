@@ -4,7 +4,7 @@ import { Routes } from "./routes/crmRoutes";
 import * as mongoose from "mongoose";
 import "reflect-metadata";
 // Create a new express application instance
-class App {
+ class App {
     public app: express.Application;
     public routePrv: Routes = new Routes();
     public mongoUrl: string = 'mongodb://mongo:27017/api';

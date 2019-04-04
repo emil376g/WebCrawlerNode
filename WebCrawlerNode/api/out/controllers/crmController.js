@@ -7,21 +7,22 @@ const puppeteer = require("puppeteer");
 let crawledPages = new Map();
 let URL;
 let browser;
-const DEPTH = parseInt(process.env.DEPTH) || 30;
+const DEPTH = parseInt(process.env.DEPTH) || 10;
 const maxDepth = DEPTH;
-const Crawl = mongoose.model('CrawlData', model.default.WebsiteSchema);
+const Crawl = mongoose.model("CrawlData", model.default.WebsiteSchema);
 class ContactController {
     addNewCrawl(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let newContact = new Crawl({
                 _id: new mongoose.Types.ObjectId(),
                 date: req.body[0].date,
+                category: req.body[0].category,
                 place: req.body[0].place,
                 title: req.body[0].title,
                 description: req.body[0].description,
                 url: req.body[0].url,
                 datastructur: req.body[0].datastructur,
-                crawlClass: req.body[0].crawlClass,
+                crawlClass: req.body[0].crawlClass
             });
             newContact.save((err, contact) => {
                 if (err) {
@@ -33,7 +34,8 @@ class ContactController {
     }
     getCrawl(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            res.json(yield crawl(req.query['url'], req.query['selector']));
+            res.json(yield crawl(req.query["url"], req.query["selector"]));
+            crawledPages.clear();
         });
     }
     getCrawlWithID(req, res) {
@@ -53,18 +55,20 @@ class ContactController {
         });
     }
     deleteCrawl(req, res) {
-        Crawl.remove({ _id: req.params.contactId }, (err) => {
+        Crawl.remove({ _id: req.params.contactId }, err => {
             if (err) {
                 res.send(err);
             }
-            res.json({ message: 'Successfully deleted contact!' });
+            res.json({ message: "Successfully deleted contact!" });
         });
     }
 }
 exports.ContactController = ContactController;
 function crawl(url, selector) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        browser = yield puppeteer.launch({ headless: false });
+        browser = yield puppeteer.launch({
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+        });
         URL = url;
         let data = [];
         data = yield crawlStarter(selector);
@@ -82,7 +86,7 @@ function crawlStarter(selector) {
 }
 function recursiveCrawl(browser, page, selector, data, depth = 0) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        if (depth > maxDepth) {
+        if (depth >= maxDepth) {
             return data;
         }
         if (crawledPages.has(page.url)) {
@@ -93,7 +97,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
             page.children = item.children;
             page.children.forEach(c => {
                 const item = crawledPages.get(c.url);
-                c.title = item ? item.title : '';
+                c.title = item ? item.title : "";
                 c.img = item ? item.img : null;
             });
             return data;
@@ -101,9 +105,9 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
         else {
             console.log(`Loading: ${page.url}`);
             const newPage = yield browser.newPage();
-            yield newPage.goto(page.url, { waitUntil: 'networkidle2' });
+            yield newPage.goto(page.url, { waitUntil: "networkidle2" });
             yield newPage.waitFor(5000);
-            let result = yield newPage.evaluate((selectors) => {
+            var result = yield newPage.evaluate(selectors => {
                 selectors = selectors;
                 let crawlStarter = function (element) {
                     let data = [];
@@ -126,26 +130,25 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                 let data = [];
                 let elements = document.querySelectorAll(selectors);
                 elements.forEach(function (element) {
-                    data = crawlStarter(element);
+                    data.push(crawlStarter(element));
                 });
                 return data;
             }, selector);
-            data.push(result);
-            let anchors = yield newPage.evaluate((selector) => {
+            let anchors = yield newPage.evaluate(selector => {
                 function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
                     const allElements = [];
                     console.log(allElements);
                     const findAllElements = function (nodes) {
-                        for (let i = 0, el; el = nodes[i]; ++i) {
+                        for (let i = 0, el; (el = nodes[i]); ++i) {
                             allElements.push(el);
                             if (el.shadowRoot) {
-                                findAllElements(el.shadowRoot.querySelectorAll('*'));
+                                findAllElements(el.shadowRoot.querySelectorAll("*"));
                             }
                         }
                     };
-                    findAllElements(document.querySelectorAll('*'));
+                    findAllElements(document.querySelectorAll(selector));
                     const filtered = allElements
-                        .filter(el => el.localName === 'a' && el.href)
+                        .filter(el => el.localName === "a" && el.href)
                         .filter(el => el.href !== location.href)
                         .filter(el => {
                         if (sameOrigin) {
@@ -159,16 +162,16 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                 return collectAllSameOriginAnchorsDeep(selector);
             }, selector);
             anchors = anchors.filter(a => a !== URL);
-            page.title = yield newPage.evaluate('document.title');
+            page.title = yield newPage.evaluate("document.title");
             page.children = anchors.map(url => ({ url }));
             crawledPages.set(page.url, page);
             yield newPage.close();
         }
         for (const childPage of page.children) {
-            yield recursiveCrawl(browser, childPage, selector, data, depth + 1);
+            return yield recursiveCrawl(browser, childPage, selector, result, depth++);
         }
         crawledPages.clear();
-        return data;
+        return result;
     });
 }
 //# sourceMappingURL=crmController.js.map

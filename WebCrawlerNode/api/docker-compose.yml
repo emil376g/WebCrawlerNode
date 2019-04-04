@@ -12,7 +12,7 @@ services:
       - /app/node_modules
     ports:
       - "65432:65432"
-    command: sh -c "mkdir -p out && touch ./out/app.js && nodemon --delay 500ms ./out/app.js"
+    command: sh -c "nodemon --delay 500ms ./out/server.js"
 
   transpiler:
     build: .
