@@ -164,38 +164,37 @@ $(document).ready(function() {
     e.preventDefault();
     var json = [];
 
-    for (let element = 0; element < $("#data").children().length; element++) {
+    for (let element = 1; element < $("#data").children().length; element++) {
       let date;
       let title;
       let des;
       let place;
       let category;
-      console.log($(".data").length)
-      for (let input = 0; input < $(".data").length; input++) { {
+      console.log($(".data").children().length)
+      for (let input = 0; input < $(".data").children().length; input++) { {
           switch (pattern.val().charAt(input)) {
             case "d":
-              date = $(".data:eq( "+ element +")").children[input].children[0]
+              date = $("#data").children()[element].children[input].children[0].value
                 .value;
                 console.log(date)
               break;
             case "t":
-              title = $(".data:eq( "+ element +")").children[input].children[0]
+              title = $("#data").children()[element].children[input].children[0].value
               .value;
                 console.log(title)
               break;
             case "b":
-              des = $(".data:eq( "+ element +")").children[input].children[0]
+              des = $("#data").children()[element].children[input].children[0].value
               .value;
                 console.log(des)
               break;
             case "p":
-              place = $(".data:eq( "+ element +")").children[input].children[0]
+              place = $("#data").children()[element].children[input].children[0].value
               .value;
                 console.log(place)
               break;
             case "c":
-              category = $(".data:eq( "+ element +")").children[input].children[0]
-              .value;
+              category = $("#data").children()[element]
                 console.log(category)
               break;
             default:
