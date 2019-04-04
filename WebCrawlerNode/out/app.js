@@ -8,7 +8,7 @@ require("reflect-metadata");
 class App {
     constructor() {
         this.routePrv = new crmRoutes_1.Routes();
-        this.mongoUrl = 'mongodb://localhost:27017/api';
+        this.mongoUrl = 'mongodb://localhost/OperaData';
         this.app = express();
         this.config();
         this.routePrv.routes(this.app);

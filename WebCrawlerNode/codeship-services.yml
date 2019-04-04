@@ -1,0 +1,28 @@
+
+transpiler:
+  build: .
+  volumes:
+    - ".:/app"
+    - "/app/node_modules"
+
+linter:
+  build: .
+  volumes:
+    - ".:/app"
+    - "/app/node_modules"
+
+mocha:
+  build: .
+  volumes:
+    - ".:/app"
+    - "/app/node_modules"
+  links:
+    - 'mongo:mongo'
+  environment:
+    NODE_ENV: 'test'
+
+mongo:
+  image: mvertes/alpine-mongo:3.2.1
+  ports:
+    - "27017"
+  command: "mongod"

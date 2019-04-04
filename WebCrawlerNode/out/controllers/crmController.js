@@ -1,6 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const mongoose = require("mongoose");
 const model = require("../models/crmModel");
 const puppeteer = require("puppeteer");
@@ -12,7 +19,7 @@ const maxDepth = DEPTH;
 const Crawl = mongoose.model('CrawlData', model.default.WebsiteSchema);
 class ContactController {
     addNewCrawl(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function* () {
             let newContact = new Crawl({
                 _id: new mongoose.Types.ObjectId(),
                 date: req.body[0].date,
@@ -32,7 +39,7 @@ class ContactController {
         });
     }
     getCrawl(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function* () {
             res.json(yield crawl(req.query['url'], req.query['selector']));
         });
     }
@@ -63,7 +70,7 @@ class ContactController {
 }
 exports.ContactController = ContactController;
 function crawl(url, selector) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         browser = yield puppeteer.launch({ headless: false });
         URL = url;
         let data = [];
@@ -72,7 +79,7 @@ function crawl(url, selector) {
     });
 }
 function crawlStarter(selector) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         let data = [];
         const root = { url: URL };
         selector = selector;
@@ -81,7 +88,7 @@ function crawlStarter(selector) {
     });
 }
 function recursiveCrawl(browser, page, selector, data, depth = 0) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         if (depth > maxDepth) {
             return data;
         }

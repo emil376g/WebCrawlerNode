@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc --build tsconfig.json",
+    "build": "tsc",
     "dev": "ts-node ./server.ts --importHelpers",
-    "start": "nodemon ../dist/Server.js",
+    "start": "nodemon ./out/Server.js",
     "prod": "npm run build && npm run start",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "test": "echo \"Error: no test specified\" && exit 1"

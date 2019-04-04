@@ -1,9 +1,16 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 class crawled1551863831129 {
     up(queryRunner) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function* () {
             yield queryRunner.query("CREATE TABLE `place_model` (`id` int NOT NULL AUTO_INCREMENT, `place` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
             yield queryRunner.query("CREATE TABLE `url` (`id` int NOT NULL AUTO_INCREMENT, `url` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
             yield queryRunner.query("CREATE TABLE `data_structure` (`id` int NOT NULL AUTO_INCREMENT, `DataStructure` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
@@ -19,7 +26,7 @@ class crawled1551863831129 {
         });
     }
     down(queryRunner) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function* () {
             yield queryRunner.query("DROP TABLE `webcrawl`.`query-result-cache`");
             yield queryRunner.query("ALTER TABLE `crawled_website` DROP FOREIGN KEY `FK_8b051063ff3fe05512af5e432fb`");
             yield queryRunner.query("ALTER TABLE `crawled_website` DROP FOREIGN KEY `FK_ca4ed1c64094dac9f1da1b4428d`");

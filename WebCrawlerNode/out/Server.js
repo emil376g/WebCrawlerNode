@@ -4,7 +4,7 @@ const app_1 = require("./app");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
-const PORT = 65432;
+const PORT = 3000;
 const httpsOptions = {
     key: fs.readFileSync(path.join(__dirname, './config') + '/key.pem'),
     cert: fs.readFileSync(path.join(__dirname, './config') + '/cert.pem')

@@ -9,7 +9,7 @@
     "declaration": true,
     "target": "es6",
     "baseUrl": "./",
-    "outDir": "./out",
+    "outDir": "./dist",
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -20,12 +20,11 @@
     "importHelpers": true
   },
   "include": [
-    "*.ts",
-    "**/*.ts",
-    "**/*.pem"
+    "api/*.ts",
+    "api/**/*.ts",
+    "api/**/*.pem"
   ],
   "exclude": [
-    "node_modules",
-    "out"
+    "node_modules"
   ]
 }
