@@ -7,7 +7,7 @@ const puppeteer = require("puppeteer");
 let crawledPages = new Map();
 let URL;
 let browser;
-const DEPTH = parseInt(process.env.DEPTH) || 10;
+const DEPTH = 10;
 const maxDepth = DEPTH;
 const Crawl = mongoose.model("CrawlData", model.default.WebsiteSchema);
 class ContactController {
@@ -34,7 +34,10 @@ class ContactController {
     }
     getCrawl(req, res) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            res.json(yield crawl(req.query["url"], req.query["selector"]));
+            console.log(req.query["url"]);
+            res.send(yield crawl(req.query["url"]).catch((err) => {
+                console.log(err);
+            }));
             crawledPages.clear();
         });
     }
@@ -64,14 +67,16 @@ class ContactController {
     }
 }
 exports.ContactController = ContactController;
-function crawl(url, selector) {
+function crawl(urls) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         browser = yield puppeteer.launch({
             args: ["--no-sandbox", "--disable-setuid-sandbox"]
         });
-        URL = url;
         let data = [];
+        URL = urls;
+        let selector = 'body';
         data = yield crawlStarter(selector);
+        crawledPages.clear();
         return data;
     });
 }
@@ -103,10 +108,16 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
             return data;
         }
         else {
-            console.log(`Loading: ${page.url}`);
+            console.log(`loading route: ${page.url}`);
             const newPage = yield browser.newPage();
-            yield newPage.goto(page.url, { waitUntil: "networkidle2" });
-            yield newPage.waitFor(5000);
+            console.log("lets go to page " + page.url);
+            yield newPage.goto(page.url, {
+                waitUntil: 'networkidle0',
+                timeout: 0
+            });
+            console.log("need to w8 waiting");
+            yield newPage.waitFor(3000);
+            console.log("done waiting");
             var result = yield newPage.evaluate(selectors => {
                 selectors = selectors;
                 let crawlStarter = function (element) {
@@ -133,7 +144,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                     data.push(crawlStarter(element));
                 });
                 return data;
-            }, selector);
+            }, selector.split());
             let anchors = yield newPage.evaluate(selector => {
                 function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
                     const allElements = [];
@@ -160,7 +171,7 @@ function recursiveCrawl(browser, page, selector, data, depth = 0) {
                     return Array.from(new Set(filtered));
                 }
                 return collectAllSameOriginAnchorsDeep(selector);
-            }, selector);
+            }, selector.split(" ")[0]);
             anchors = anchors.filter(a => a !== URL);
             page.title = yield newPage.evaluate("document.title");
             page.children = anchors.map(url => ({ url }));

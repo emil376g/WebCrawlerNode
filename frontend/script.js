@@ -12,17 +12,14 @@ $(document).ready(function() {
 
     e.preventDefault();
     var settings = {
-      async: true,
-      crossDomain: true,
       url:
-        "http://127.0.0.1:65432/crawl?key=78942ef2c1c98bf10fca09c808d718fa3734703e",
+        "http://127.0.0.1:65432/crawl",
       method: "GET",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
       data: {
         url: $("#url").val(),
-        selector: $("#selector").val()
       }
     };
 
@@ -164,37 +161,32 @@ $(document).ready(function() {
     e.preventDefault();
     var json = [];
 
-    for (let element = 1; element < $("#data").children().length; element++) {
+    for (let element = 0; element < $("#data").children().length; element++) {
       let date;
       let title;
       let des;
       let place;
       let category;
-      console.log($(".data").children().length)
       for (let input = 0; input < $(".data").children().length; input++) { {
           switch (pattern.val().charAt(input)) {
             case "d":
-              date = $("#data").children()[element].children[input].children[0].value
-                .value;
+              date = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
                 console.log(date)
               break;
             case "t":
-              title = $("#data").children()[element].children[input].children[0].value
-              .value;
+              title = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
                 console.log(title)
               break;
             case "b":
-              des = $("#data").children()[element].children[input].children[0].value
-              .value;
+              des = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
                 console.log(des)
               break;
             case "p":
-              place = $("#data").children()[element].children[input].children[0].value
-              .value;
+              place = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
                 console.log(place)
               break;
             case "c":
-              category = $("#data").children()[element]
+              category = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
                 console.log(category)
               break;
             default:

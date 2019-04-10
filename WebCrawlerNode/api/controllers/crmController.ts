@@ -5,7 +5,7 @@ import * as puppeteer from "puppeteer";
 let crawledPages = new Map();
 let URL;
 let browser;
-const DEPTH = parseInt(process.env.DEPTH) || 10;
+const DEPTH = 10;
 const maxDepth: number = DEPTH; // Subpage depth to crawl site.
 
 const Crawl = mongoose.model("CrawlData", model.default.WebsiteSchema);
@@ -41,7 +41,10 @@ export class ContactController {
     });
   }
   public async getCrawl(req: Request, res: Response) {
-    res.json(await crawl(req.query["url"], req.query["selector"]));
+    console.log(req.query["url"])
+    res.send(await crawl(req.query["url"]).catch((err) => {
+        console.log(err);
+    }));
     crawledPages.clear()
   }
   public getCrawlWithID(req: Request, res: Response) {
@@ -74,14 +77,19 @@ export class ContactController {
     });
   }
 }
-async function crawl(url: string, selector: string): Promise<any> {
+async function crawl(urls: string): Promise<any> {
   browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
-  URL = url;
   let data: any[] = [];
-  data = await crawlStarter(selector);
-  return data;
+
+  // await urls.split(" ").forEach(async url => {
+    URL = urls;
+    let selector = 'body'
+    data = await crawlStarter(selector);
+    // });
+    crawledPages.clear();
+    return data;
 }
 
 async function crawlStarter(selector): Promise<any[]> {
@@ -111,11 +119,16 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
     });
     return data;
   } else {
-    console.log(`Loading: ${page.url}`);
-
+    console.log(`loading route: ${page.url}`);
     const newPage = await browser.newPage();
-    await newPage.goto(page.url, { waitUntil: "networkidle2" });
-    await newPage.waitFor(5000);
+    console.log("lets go to page "+ page.url)
+    await newPage.goto(page.url, {
+        waitUntil: 'networkidle0',
+        timeout: 0})
+        console.log("need to w8 waiting")
+
+    await newPage.waitFor(3000);
+    console.log("done waiting")
     var result = await newPage.evaluate(selectors => {
       selectors = selectors;
       let crawlStarter = function(element: ChildNode): any[] {
@@ -137,14 +150,14 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         }
         return data;
       };
-
+      // && element.textContent.replace(/\s/g, "") != ""
       let data: any[] = [];
       let elements = document.querySelectorAll(selectors);
       elements.forEach(function(element) {
         data.push(crawlStarter(element));
       });
       return data; 
-    }, selector);
+    }, selector.split());
     let anchors = await newPage.evaluate(selector => {
       function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
         const allElements = [];
@@ -174,7 +187,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         return Array.from(new Set(filtered));
       }
       return collectAllSameOriginAnchorsDeep(selector);
-    }, selector); 
+    }, selector.split(" ")[0]); 
     anchors = anchors.filter(a => a !== URL); // link doesn't point to start url of crawl.
 
     page.title = await newPage.evaluate("document.title");
