@@ -19,6 +19,9 @@ x64/
 x86/
 out/
 *.js
+*.dockerignore
+*.js.map
+*.ts.map
 !script.js
 bld/
 [Bb]in/
