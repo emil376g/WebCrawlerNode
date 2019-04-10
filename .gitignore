@@ -17,8 +17,8 @@
 [Rr]eleases/
 x64/
 x86/
-*/out
-*/out/*.js
+*.js
+!script.js
 bld/
 [Bb]in/
 [Oo]bj/
@@ -260,4 +260,4 @@ paket-files/
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
-*.pyc
+*.pycdebug.log

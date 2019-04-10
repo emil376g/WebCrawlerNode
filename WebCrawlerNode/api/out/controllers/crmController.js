@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
 const mongoose = require("mongoose");
 const model = require("../models/crmModel");
 const puppeteer = require("puppeteer");
@@ -11,35 +10,31 @@ const DEPTH = 10;
 const maxDepth = DEPTH;
 const Crawl = mongoose.model("CrawlData", model.default.WebsiteSchema);
 class ContactController {
-    addNewCrawl(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            let newContact = new Crawl({
-                _id: new mongoose.Types.ObjectId(),
-                date: req.body[0].date,
-                category: req.body[0].category,
-                place: req.body[0].place,
-                title: req.body[0].title,
-                description: req.body[0].description,
-                url: req.body[0].url,
-                datastructur: req.body[0].datastructur,
-                crawlClass: req.body[0].crawlClass
-            });
-            newContact.save((err, contact) => {
-                if (err) {
-                    res.send(err);
-                }
-                res.json(contact);
-            });
+    async addNewCrawl(req, res) {
+        let newContact = new Crawl({
+            _id: new mongoose.Types.ObjectId(),
+            date: req.body[0].date,
+            category: req.body[0].category,
+            place: req.body[0].place,
+            title: req.body[0].title,
+            description: req.body[0].description,
+            url: req.body[0].url,
+            datastructur: req.body[0].datastructur,
+            crawlClass: req.body[0].crawlClass
+        });
+        newContact.save((err, contact) => {
+            if (err) {
+                res.send(err);
+            }
+            res.json(contact);
         });
     }
-    getCrawl(req, res) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            console.log(req.query["url"]);
-            res.send(yield crawl(req.query["url"]).catch((err) => {
-                console.log(err);
-            }));
-            crawledPages.clear();
-        });
+    async getCrawl(req, res) {
+        console.log(req.query["url"]);
+        res.send(await crawl(req.query["url"]).catch((err) => {
+            console.log(err);
+        }));
+        crawledPages.clear();
     }
     getCrawlWithID(req, res) {
         Crawl.findById(req.params.contactId, (err, contact) => {
@@ -67,122 +62,116 @@ class ContactController {
     }
 }
 exports.ContactController = ContactController;
-function crawl(urls) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        browser = yield puppeteer.launch({
-            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+async function crawl(urls) {
+    browser = await puppeteer.launch({
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    });
+    let data = [];
+    URL = urls;
+    let selector = 'body';
+    data = await crawlStarter(selector);
+    crawledPages.clear();
+    return data;
+}
+async function crawlStarter(selector) {
+    let data = [];
+    const root = { url: URL };
+    selector = selector;
+    data = await recursiveCrawl(browser, root, selector, data);
+    return data;
+}
+async function recursiveCrawl(browser, page, selector, data, depth = 0) {
+    if (depth >= maxDepth) {
+        return data;
+    }
+    if (crawledPages.has(page.url)) {
+        console.log(`Reusing route: ${page.url}`);
+        const item = crawledPages.get(page.url);
+        page.title = item.title;
+        page.img = item.img;
+        page.children = item.children;
+        page.children.forEach(c => {
+            const item = crawledPages.get(c.url);
+            c.title = item ? item.title : "";
+            c.img = item ? item.img : null;
         });
-        let data = [];
-        URL = urls;
-        let selector = 'body';
-        data = yield crawlStarter(selector);
-        crawledPages.clear();
         return data;
-    });
-}
-function crawlStarter(selector) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        let data = [];
-        const root = { url: URL };
-        selector = selector;
-        data = yield recursiveCrawl(browser, root, selector, data);
-        return data;
-    });
-}
-function recursiveCrawl(browser, page, selector, data, depth = 0) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        if (depth >= maxDepth) {
-            return data;
-        }
-        if (crawledPages.has(page.url)) {
-            console.log(`Reusing route: ${page.url}`);
-            const item = crawledPages.get(page.url);
-            page.title = item.title;
-            page.img = item.img;
-            page.children = item.children;
-            page.children.forEach(c => {
-                const item = crawledPages.get(c.url);
-                c.title = item ? item.title : "";
-                c.img = item ? item.img : null;
-            });
-            return data;
-        }
-        else {
-            console.log(`loading route: ${page.url}`);
-            const newPage = yield browser.newPage();
-            console.log("lets go to page " + page.url);
-            yield newPage.goto(page.url, {
-                waitUntil: 'networkidle0',
-                timeout: 0
-            });
-            console.log("need to w8 waiting");
-            yield newPage.waitFor(3000);
-            console.log("done waiting");
-            var result = yield newPage.evaluate(selectors => {
-                selectors = selectors;
-                let crawlStarter = function (element) {
-                    let data = [];
-                    data = recursiveCrawl(element, data);
-                    return data;
-                };
-                let recursiveCrawl = function (element, data) {
-                    if (element.hasChildNodes()) {
-                        element.childNodes.forEach(function (child) {
-                            recursiveCrawl(child, data);
-                        });
-                    }
-                    else {
-                        if (element.nodeType != 8) {
-                            data.push(element.textContent);
-                        }
-                    }
-                    return data;
-                };
+    }
+    else {
+        console.log(`loading route: ${page.url}`);
+        const newPage = await browser.newPage();
+        console.log("lets go to page " + page.url);
+        await newPage.goto(page.url, {
+            waitUntil: 'networkidle0',
+            timeout: 0
+        });
+        console.log("need to w8 waiting");
+        await newPage.waitFor(3000);
+        console.log("done waiting");
+        var result = await newPage.evaluate(selectors => {
+            selectors = selectors;
+            let crawlStarter = function (element) {
                 let data = [];
-                let elements = document.querySelectorAll(selectors);
-                elements.forEach(function (element) {
-                    data.push(crawlStarter(element));
-                });
+                data = recursiveCrawl(element, data);
                 return data;
-            }, selector.split());
-            let anchors = yield newPage.evaluate(selector => {
-                function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
-                    const allElements = [];
-                    console.log(allElements);
-                    const findAllElements = function (nodes) {
-                        for (let i = 0, el; (el = nodes[i]); ++i) {
-                            allElements.push(el);
-                            if (el.shadowRoot) {
-                                findAllElements(el.shadowRoot.querySelectorAll("*"));
-                            }
-                        }
-                    };
-                    findAllElements(document.querySelectorAll(selector));
-                    const filtered = allElements
-                        .filter(el => el.localName === "a" && el.href)
-                        .filter(el => el.href !== location.href)
-                        .filter(el => {
-                        if (sameOrigin) {
-                            return new URL(location).origin === new URL(el.href).origin;
-                        }
-                        return true;
-                    })
-                        .map(a => a.href);
-                    return Array.from(new Set(filtered));
+            };
+            let recursiveCrawl = function (element, data) {
+                if (element.hasChildNodes()) {
+                    element.childNodes.forEach(function (child) {
+                        recursiveCrawl(child, data);
+                    });
                 }
-                return collectAllSameOriginAnchorsDeep(selector);
-            }, selector.split(" ")[0]);
-            anchors = anchors.filter(a => a !== URL);
-            page.title = yield newPage.evaluate("document.title");
-            page.children = anchors.map(url => ({ url }));
-            crawledPages.set(page.url, page);
-            yield newPage.close();
-        }
-        for (const childPage of page.children) {
-            return yield recursiveCrawl(browser, childPage, selector, result, depth++);
-        }
-        crawledPages.clear();
-        return result;
-    });
+                else {
+                    if (element.nodeType != 8) {
+                        data.push(element.textContent);
+                    }
+                }
+                return data;
+            };
+            let data = [];
+            let elements = document.querySelectorAll(selectors);
+            elements.forEach(function (element) {
+                data.push(crawlStarter(element));
+            });
+            return data;
+        }, selector.split());
+        let anchors = await newPage.evaluate(selector => {
+            function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
+                const allElements = [];
+                console.log(allElements);
+                const findAllElements = function (nodes) {
+                    for (let i = 0, el; (el = nodes[i]); ++i) {
+                        allElements.push(el);
+                        if (el.shadowRoot) {
+                            findAllElements(el.shadowRoot.querySelectorAll("*"));
+                        }
+                    }
+                };
+                findAllElements(document.querySelectorAll(selector));
+                const filtered = allElements
+                    .filter(el => el.localName === "a" && el.href)
+                    .filter(el => el.href !== location.href)
+                    .filter(el => {
+                    if (sameOrigin) {
+                        return new URL(location).origin === new URL(el.href).origin;
+                    }
+                    return true;
+                })
+                    .map(a => a.href);
+                return Array.from(new Set(filtered));
+            }
+            return collectAllSameOriginAnchorsDeep(selector);
+        }, selector.split(" ")[0]);
+        anchors = anchors.filter(a => a !== URL);
+        page.title = await newPage.evaluate("document.title");
+        page.children = anchors.map(url => ({ url }));
+        crawledPages.set(page.url, page);
+        await newPage.close();
+    }
+    for (const childPage of page.children) {
+        return await recursiveCrawl(browser, childPage, selector, result, depth++);
+    }
+    crawledPages.clear();
+    return result;
 }
 //# sourceMappingURL=crmController.js.map

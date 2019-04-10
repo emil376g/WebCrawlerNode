@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "commonjs",
+    "module": "commonJS",
     "noImplicitAny": false,
     "sourceMap": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "declaration": true,
-    "target": "es6",
+    "target": "es2018",
     "baseUrl": "./",
     "outDir": "./out",
     "noUnusedLocals": true,
