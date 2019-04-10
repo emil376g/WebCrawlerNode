@@ -1,1 +1,0 @@
-module.exports = require("npm:angular-timer@1.2.0/dist/angular-timer.js");

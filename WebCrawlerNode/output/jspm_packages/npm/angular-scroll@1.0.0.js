@@ -1,1 +1,0 @@
-module.exports = require("npm:angular-scroll@1.0.0/index.js");
