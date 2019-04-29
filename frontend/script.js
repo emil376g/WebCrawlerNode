@@ -20,6 +20,7 @@ $(document).ready(function() {
       },
       data: {
         url: $("#url").val(),
+        selector: $("#selector").val()
       }
     };
 
@@ -167,26 +168,29 @@ $(document).ready(function() {
       let des;
       let place;
       let category;
-      for (let input = 0; input < $(".data").children().length; input++) { {
+      console.log($(`.data:eq(${element})`).children())
+      for (let input = 0; input < $(`#data .data:eq(${element})`).children().length; input++) { {
           switch (pattern.val().charAt(input)) {
             case "d":
-              date = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
+              date = $(`#data > .data:eq(${element}) > tr:eq(${input}) > input`).val()
                 console.log(date)
               break;
             case "t":
-              title = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
+              title =  $(`#data > .data:eq(${element}) > tr:eq(${input}) > input`).val()
                 console.log(title)
               break;
             case "b":
-              des = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
+              des =  $(`#data > .data:eq(${element}) > tr:eq(${input}) > input`).val()
                 console.log(des)
               break;
             case "p":
-              place = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
+              place =  $(`#data > .data:eq(${element}) > tr:eq(${input}) > input`).val()
                 console.log(place)
               break;
             case "c":
-              category = $(`#data > .data:eq(${element}) > td:eq(${input}) > input`).val()
+              category = $(`#data > .data:eq(${element}) > tr:eq(${input}) > input`).val()
+              console.log($(`.data:eq(${element}) td:eq(${input})`))
+              console.log(input)
                 console.log(category)
               break;
             default:

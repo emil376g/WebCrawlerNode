@@ -7,7 +7,7 @@ let URL;
 let browser;
 const DEPTH = 10;
 const maxDepth: number = DEPTH; // Subpage depth to crawl site.
-
+var selectors;
 const Crawl = mongoose.model("CrawlData", model.default.WebsiteSchema);
 export class ContactController {
   public async addNewCrawl(req: Request, res: Response) {
@@ -42,7 +42,7 @@ export class ContactController {
   }
   public async getCrawl(req: Request, res: Response) {
     console.log(req.query["url"])
-    res.send(await crawl(req.query["url"]).catch((err) => {
+    res.send(await crawl(req.query["url"], req.query['selector']).catch((err) => {
         console.log(err);
     }));
     crawledPages.clear()
@@ -77,7 +77,7 @@ export class ContactController {
     });
   }
 }
-async function crawl(urls: string): Promise<any> {
+async function crawl(urls: string, selector: string): Promise<any> {
   browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
@@ -85,9 +85,12 @@ async function crawl(urls: string): Promise<any> {
 
   // await urls.split(" ").forEach(async url => {
     URL = urls;
-    let selector = 'body'
-    data = await crawlStarter(selector);
-    // });
+    let CrawlClass = await Crawl.find({url: URL}, 'crawlClass', async function(err, docs){
+
+      })
+      console.log(selector)
+      selectors = CrawlClass[0] !== undefined ? CrawlClass[0]['crawlClass'] : selector;
+      data = await crawlStarter(selectors)
     crawledPages.clear();
     return data;
 }
@@ -119,6 +122,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
     });
     return data;
   } else {
+    console.log(selector)
     console.log(`loading route: ${page.url}`);
     const newPage = await browser.newPage();
     console.log("lets go to page "+ page.url)
@@ -142,6 +146,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         if (element.hasChildNodes()) {
           element.childNodes.forEach(function(child: ChildNode) {
             recursiveCrawl(child, data);
+
           });
         } else {
           if (element.nodeType != 8) {
@@ -150,14 +155,14 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         }
         return data;
       };
-      // && element.textContent.replace(/\s/g, "") != ""
       let data: any[] = [];
       let elements = document.querySelectorAll(selectors);
       elements.forEach(function(element) {
         data.push(crawlStarter(element));
       });
       return data; 
-    }, selector.split());
+    }, selector);
+    console.log(result)
     let anchors = await newPage.evaluate(selector => {
       function collectAllSameOriginAnchorsDeep(selector, sameOrigin = true) {
         const allElements = [];
@@ -187,7 +192,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
         return Array.from(new Set(filtered));
       }
       return collectAllSameOriginAnchorsDeep(selector);
-    }, selector.split(" ")[0]); 
+    }, selector); 
     anchors = anchors.filter(a => a !== URL); // link doesn't point to start url of crawl.
 
     page.title = await newPage.evaluate("document.title");
@@ -197,7 +202,7 @@ async function recursiveCrawl(browser, page, selector, data: any[], depth = 0) {
     await newPage.close();
   }
   for (const childPage of page.children) {
-    return await recursiveCrawl(browser, childPage, selector, result, depth++);
+    await recursiveCrawl(browser, childPage, selector, result, depth++);
   }
   crawledPages.clear();
   return result;

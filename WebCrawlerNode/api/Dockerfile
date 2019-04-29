@@ -13,12 +13,13 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /src/*.deb
-RUN npm install \
+RUN npm i puppeteer \
     # Add user so we don't need --no-sandbox.
     # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
     && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser ./node_modules
+    && chown -R pptruser:pptruser ./node_modules \
+    && chown -R pptruser:pptruser ./yarn.lock
 USER pptruser
 CMD ["google-chrome-unstable"]

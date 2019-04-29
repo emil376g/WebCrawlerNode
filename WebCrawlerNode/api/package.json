@@ -1,6 +1,7 @@
 {
   "name": "web-crawler-node",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "main": "../../frontend/index.html",
   "private": true,
   "scripts": {
     "build": "tsc",
@@ -23,6 +24,8 @@
     "@types/pg": "^7.4.14",
     "@types/puppeteer": "^1.12.3",
     "@types/serve-favicon": "^2.2.30",
+    "appjs": "0.0.20",
+    "appjs-win32": "0.0.19",
     "body-parser": "^1.15.0",
     "cheerio": "^1.0.0-rc.2",
     "cookie-parser": "^1.4.0",
